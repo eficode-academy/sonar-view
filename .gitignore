@@ -38,6 +38,8 @@ __pycache__/
 # Distribution / packaging
 .Python
 build/
+bin/
+pyenv.cfg
 develop-eggs/
 dist/
 downloads/
