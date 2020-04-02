@@ -1,5 +1,7 @@
 # sonar
 
+![](https://github.com/praqma-training/sonar/workflows/Cloud%20Functions/badge.svg)
+
 ## Data flow
 
 Data comes in CSV files (From Google forms or Survey pal)
