@@ -1,0 +1,15 @@
+name: Frontend
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+    foo:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Bar
+          run: |
+            echo "Hallå!"
