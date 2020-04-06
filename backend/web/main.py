@@ -1,21 +1,21 @@
+import os
+import shutil
+from os import path
 from flask import escape, Flask
-from data_helper import format_to_json
+from helper import csv_to_json
+from config import CSV_TMP_PATH
 from google.cloud import firestore
 import google.cloud.exceptions
 
 def sonar_survey(request):
     db = firestore.Client()
+    csv_file_path = CSV_TMP_PATH
     request_csv = request.files['data']
     if not request_csv:
-        return 'Upload a CSV file'
-    print(request_csv)
-    json_data = format_to_json(request_csv)
-    print(json_data)
-    db.collection('sonar').document('TkXdYUqqliiKrMVNO07J').set(json_data) #firestore name, must be in same project namespace
-    db.collection('sonar').document('foo').set({
-        u'first': u'Alan',
-        u'middle': u'Mathison',
-        u'last': u'Turing',
-        u'born': 1912
-    })
-    return "OK"
+        return 'No file in the POST request'
+    request_csv.save(csv_file_path)
+    json_data = csv_to_json(csv_file_path)
+    # The json format of test data currently incorrect, Firstore doesn't accept an array as the document content.
+    # So temporary take the first element as the document content.
+    db.collection('sonar').document('foo').set(json_data[0]) 
+    return json_data[0]
