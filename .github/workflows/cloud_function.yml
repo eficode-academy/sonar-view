@@ -2,7 +2,7 @@ name: Cloud Functions
 
 on:
   push:
-    branches: [ ruiyang/feat/cloud_func, master, ruiyang/feat/ci ]
+
   pull_request:
     branches: [ master ]
 
@@ -17,8 +17,8 @@ jobs:
       uses: actions/setup-python@v1
       with: 
         python-version: 3.7
-    - name: Install dependencies
-      working-directory:  ${{env.working-directory}} 
+    - name: Install dependencies for web functions
+      working-directory:  ${{env.working-directory}}/web
       run: |
         python3 -m pip install -U pip
         pip3 install -r requirements.txt

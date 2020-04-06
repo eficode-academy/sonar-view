@@ -1,18 +1,21 @@
-#from flask import escape, Flask
-from format_data_helper import *
+from flask import escape, Flask
+from data_helper import format_to_json
+from google.cloud import firestore
+import google.cloud.exceptions
 
-
-def hello_http(request):
-    request_json = request.get_json(silent=True)
-    request_args = request.args
-
-    if request_json and 'name' in request_json:
-        name = request_json['name']
-    elif request_args and 'name' in request_args:
-        name = request_args['name']
-    else:
-        name = 'World'
-    return 'Hello {}!'.format(escape(name))
-    
-def store_data_to_database():
-    format_to_json()
+def sonar_survey(request):
+    db = firestore.Client()
+    request_csv = request.files['data']
+    if not request_csv:
+        return 'Upload a CSV file'
+    print(request_csv)
+    json_data = format_to_json(request_csv)
+    print(json_data)
+    db.collection('sonar').document('TkXdYUqqliiKrMVNO07J').set(json_data) #firestore name, must be in same project namespace
+    db.collection('sonar').document('foo').set({
+        u'first': u'Alan',
+        u'middle': u'Mathison',
+        u'last': u'Turing',
+        u'born': 1912
+    })
+    return "OK"
