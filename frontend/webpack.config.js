@@ -11,6 +11,7 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"],
   },
+  entry: "./src/index.js",
   output: {
     path: __dirname + "/dist",
     publicPath: "/",
@@ -20,6 +21,7 @@ module.exports = {
     contentBase: "./dist",
     port: 3000,
     host: "localhost",
+    historyApiFallback: true,
     disableHostCheck: true,
   },
 };
