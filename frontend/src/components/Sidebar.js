@@ -11,13 +11,16 @@ const Wrapper = styled.div`
   height: 100vh;
   position: sticky;
   overflow: scroll;
+  ${(props) => props.theme.media.md`
+      display: none
+  `}
 `;
 
 function Sidebar({ items }) {
   return (
     <Wrapper>
       <Flex flexDirection="column">
-        <Box width={["100px", "120px"]} mb="40px">
+        <Box width="120px" mb="70px">
           <Logo />
         </Box>
         {items.map((item) => (

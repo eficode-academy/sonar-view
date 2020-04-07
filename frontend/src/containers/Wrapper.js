@@ -22,9 +22,9 @@ const Wrapper = () => {
   };
 
   return (
-    <Flex width="100%">
+    <Flex width="100%" sx={{ height: "100vh" }}>
       <Sidebar items={dates} />
-      <Flex alignItems="center" justifyContent="center" width="100%">
+      <Flex alignItems="center" justifyContent="center" m="auto">
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/surveys/:id" render={renderUsers} />
