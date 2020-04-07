@@ -2,31 +2,42 @@
 
 ### Project setup
 
-To set up this project on your compoter you need to have `nodejs` and `npm` or `yarn` installed on your computer.
+To set up this project on your compoter you need to have [node.js](https://nodejs.org/) and `npm` or [yarn](https://yarnpkg.com/) installed on your computer.
 
-First install the dependencies in the root of the frontend directory
+This project uses [React](https://reactjs.org/)
 
-<pre>npm install</pre>
+To run the project locally, first install the dependencies in the root of the frontend directory
 
-or if you prefere `yarn`
+```sh
+npm install
+```
 
-<pre>yarn install</pre>
+or if you prefere `yarn`:
 
-Run the application in the development mode by running
+```sh
+yarn install
+```
 
-<pre>npm run dev</pre>
+Run the application in the development mode by running the command:
+
+```sh
+npm run dev
+```
 
 or
 
-<pre>yarn dev </pre>
+```sh
+yarn dev
+```
 
 The project will run on port `3000`
 
 ### Project structure
 
-In the project, the code lives in the `src` directry. The code that in the `components` folder are dummy components, as in, they do not contain any actual data. `Containers` on the other hand are components that contain data.
+In the project, the code lives in the `src` directry. The code that in the `components` folder are dummy components, as in, they do not contain any actual data. `containers` on the other hand are components that contain data.
 
-`Rebass` and `styled components` are used to styling of the project. Theming happens in the `utils/theme.js`. No colors or font sizes are to be defined outside of the `theme.js`
+[Rebass](https://rebassjs.org/) and [Styled components](https://styled-components.com/) are used to styling of the project. Theming happens in the
+[utils/theme.js](./src/utils). No colors or font sizes are to be defined outside of the `theme.js`
 
 #### Responsive layout
 
