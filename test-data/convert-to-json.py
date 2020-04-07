@@ -30,7 +30,7 @@ print(current_dir)
 #     json.dump(json_data, f)
 
 
-with open('test-data/large-test copy.json', 'r') as data:
+with open('test-data/large-test-unformated.json', 'r') as data:
     json_data = json.load(data)
     for item in json_data:
         for key in list(item.keys()):

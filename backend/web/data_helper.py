@@ -18,6 +18,7 @@ def format_to_json(request_csv):
             json.dump(rows, f)
 
         with open('/tmp/sonar.json', 'r') as data:
+            json_data = json.load(data)
             for item in json_data:
                 for key in list(item.keys()):
                     if "How is your proficiency in the following tools/technologies/skills:" in key:
