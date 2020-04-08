@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 import { Flex, Box } from "rebass";
 import Link from "./Link";
@@ -31,6 +32,8 @@ function Sidebar({ items }) {
   );
 }
 
-Sidebar.propTypes = {};
+Sidebar.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 export default Sidebar;

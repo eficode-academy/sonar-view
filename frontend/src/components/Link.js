@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 import { Box } from "rebass";
@@ -23,5 +24,15 @@ function Link({ title, href, exact }) {
     </Box>
   );
 }
+
+Link.defaultProps = {
+  exact: false,
+};
+
+Link.propTypes = {
+  title: PropTypes.string.isRequired,
+  href: PropTypes.string.isRequired,
+  exact: PropTypes.bool,
+};
 
 export default Link;

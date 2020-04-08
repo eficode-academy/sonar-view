@@ -16,5 +16,13 @@
     "sourceType": "module"
   },
   "plugins": ["react"],
-  "rules": { "semi": ["error", "always"], "comma-dangle": ["error", "always"] }
+  "rules": {
+    "semi": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-props-no-spreading": [
+      0,
+      { "custom": "ignore", "explicitSpread": "ignore", "html": "ignore" }
+    ]
+  }
 }

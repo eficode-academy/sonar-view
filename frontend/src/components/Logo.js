@@ -1,11 +1,12 @@
 import React from "react";
 
 const Logo = (props) => (
+  // eslint-disable jsx-props-no-spreading
   <svg viewBox="0 0 729.08 177.65" {...props}>
     <defs>
       <style>{".prefix__cls-1{fill:#231f20}"}</style>
     </defs>
-    <title>{"Eficode_text_logo_black"}</title>
+    <title>Eficode_text_logo_black</title>
     <g id="prefix__Layer_2" data-name="Layer 2">
       <g id="prefix__Layer_1-2" data-name="Layer 1">
         <path
