@@ -2,21 +2,22 @@ import csv
 import json
 import os
 from random import randint
+from datetime import date
 
-                                      
+current_dir = os.path.dirname(os.path.abspath(__file__)) 
+print(current_dir)                                       
 
-def csv_to_json(file_path):
-    json_tmp_path = os.path.join(os.path.dirname(file_path), 'sonar.json')
-    with open(file_path, newline='') as f:
-        try:
-            reader = csv.DictReader(f)
-        except Exception as e:
-            print(e)
-        rows = list(reader)
-    with open(json_tmp_path, 'w') as f:
-        json.dump(rows, f)
-    with open(json_tmp_path, 'r') as data:
-        json_data = json.load(data) 
+#Only run once to Fetch from CSV to JSON
+
+with open('test-data/data.csv', 'r') as f:
+    reader = csv.DictReader(f)
+    rows = list(reader)
+
+with open('test-data/test.json', 'w') as f:
+    json.dump(rows, f)
+
+with open('test-data/test.json', 'r') as data:
+    json_data = json.load(data) 
     for item in json_data:
         if item['Name']:
             item['Name'] = "Sara Parker-"+str(randint(100, 999))
@@ -32,6 +33,8 @@ def csv_to_json(file_path):
         survey_dict= {}
         survey_dict["survey"] = []
         repeat_dict["Person"] = []
+        today=date.today()
+        survey_period=str(today.month)+'/'+str(today.year)
         for key in list(item.keys()):
             if key == "Team":
                 team_dict["Team"] = item[key]
@@ -51,6 +54,6 @@ def csv_to_json(file_path):
                 survey_dict["survey"].append(skills)
         repeat_dict["Person"][0].update(survey_dict)
         new_json.append(repeat_dict)
-    os.remove(json_tmp_path)
-    os.remove(file_path)
-    return new_json
+
+with open('test-data/test.json', 'w') as f:
+    json.dump(new_json, f)

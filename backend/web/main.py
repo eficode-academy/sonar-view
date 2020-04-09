@@ -1,4 +1,6 @@
 import os
+import json
+from datetime import date
 import shutil
 from os import path
 from flask import escape, Flask
@@ -15,7 +17,11 @@ def sonar_survey(request):
         return 'No file in the POST request'
     request_csv.save(csv_file_path)
     json_data = csv_to_json(csv_file_path)
-    # The json format of test data currently incorrect, Firstore doesn't accept an array as the document content.
-    # So temporary take the first element as the document content.
-    db.collection('sonar').document('foo').set(json_data[0]) 
-    return json_data[0]
+    today = date.today()
+    survey_period = str(today.month)+'/'+str(today.year)
+    for item in json_data:
+            if item["Person"][0]["Name"]:
+                document_name = item["Person"][0]["Name"]
+                #replace survey below with survey_peroid
+                db.collection("survey").document(document_name).set(item) 
+    return 'Successfully wrote to storage'
