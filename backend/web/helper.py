@@ -20,11 +20,10 @@ def csv_to_json(file_path):
     for item in json_data:
         if item['Name']:
             item['Name'] = "Sara Parker-"+str(randint(100, 999))
-            item['Email Address'] = item['Name']+"@eficode.com"
-    for item in json_data:
+            item['Email'] = item['Name']+"@eficode.com"
         for key in list(item.keys()):
             if (item[key]=='' or item[key]=="Don't know it"):
-                del item[key]
+                del item[key]      
     new_json = []
     for item in json_data:
         repeat_dict = {} 
@@ -54,3 +53,6 @@ def csv_to_json(file_path):
     os.remove(json_tmp_path)
     os.remove(file_path)
     return new_json
+
+def construct_response(msg: str, date: str, name: list):
+    return {'msg': msg, 'survey-date':date, 'names': name}
