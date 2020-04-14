@@ -2,7 +2,7 @@ name: Cloud Functions
 
 on:
   push:
-    branches: [ ruiyang/feat/cloud_func, master, ruiyang/feat/ci ]
+
   pull_request:
     branches: [ master ]
 
@@ -17,8 +17,8 @@ jobs:
       uses: actions/setup-python@v1
       with: 
         python-version: 3.7
-    - name: Install dependencies
-      working-directory:  ${{env.working-directory}} 
+    - name: Install dependencies for web functions
+      working-directory:  ${{env.working-directory}}/web
       run: |
         python3 -m pip install -U pip
         pip3 install -r requirements.txt
@@ -28,7 +28,7 @@ jobs:
         pip install flake8
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-    - name: test with pytest
-      working-directory: ${{env.working-directory}}/test
-      run: |
-        pytest web.py
+    # - name: test with pytest
+    #   working-directory: ${{env.working-directory}}/test
+    #   run: |
+    #     pytest web.py

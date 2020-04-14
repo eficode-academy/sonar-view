@@ -1,5 +1,6 @@
 # sonar
-![](https://github.com/praqma-training/sonar/workflows/frontend/badge.svg)
+![](https://github.com/praqma-training/sonar/workflows/Frontend/badge.svg)
+
 ![](https://github.com/praqma-training/sonar/workflows/Cloud%20Functions/badge.svg)
 
 ## Data flow
