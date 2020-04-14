@@ -59,3 +59,8 @@ We use Google Firestore as database
   curl -F data=@data.csv <root_url>/sonar_survey
 
 * **Notes:**
+
+* **Cloud Run:**
+  gcloud builds submit --tag gcr.io/sonar-272913/sonar-survey .
+
+  gcloud run deploy --image gcr.io/sonar-272913/sonar-survey --platform managed
