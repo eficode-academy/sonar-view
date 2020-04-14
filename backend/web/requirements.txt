@@ -1,4 +1,0 @@
-google-cloud-storage
-flask
-pytest
-firebase_admin

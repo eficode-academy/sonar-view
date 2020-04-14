@@ -1,9 +1,17 @@
 import csv
 import json
 import os
+import re
+from datetime import datetime
 from random import randint
 
-                                      
+
+def is_correct_name(name):
+    try:
+        datetime.strptime(name, '%Y-%m')
+        return True
+    except ValueError:
+        return False
 
 def csv_to_json(file_path):
     json_tmp_path = os.path.join(os.path.dirname(file_path), 'sonar.json')
@@ -54,5 +62,5 @@ def csv_to_json(file_path):
     os.remove(file_path)
     return new_json
 
-def construct_response(msg: str, date: str, name: list):
-    return {'msg': msg, 'survey-date':date, 'names': name}
+def construct_response(msg: str, collection: str, name: list):
+    return {'msg': msg, 'collection':collection, 'persons': name}
