@@ -1,10 +1,14 @@
 import json
 import os
-from google.cloud import firestore
+from google.cloud import firestore, logging
 import csv
 import re
 from datetime import datetime
 from random import randint
+
+client = logging.Client()     
+logger = client.logger('endpoints-logger') 
+
 
 def fetch_all_date():
     db = firestore.Client()
@@ -21,17 +25,8 @@ def fetch_each_survey_person(id):
     each_survey_person = {}
     for index, doc in enumerate(survey_names):
         each_survey_person[index] = doc.id
-    each_name = fetch_each_name(id, each_survey_person)
+    each_name = {k: doc_ref.document(email).get().to_dict()['Person'][0]['Name'] for (k, email) in each_survey_person.items()}
     return each_name
-
-def fetch_each_name(id, each_survey_person):
-    db = firestore.Client()
-    doc_ref = db.collection(id)
-    for key in each_survey_person:
-        all_items = doc_ref.document(each_survey_person[key]).collection("Person").get()
-    return all_items
-
-
 
 def is_correct_name(name):
     try:
