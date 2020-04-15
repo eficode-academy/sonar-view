@@ -10,8 +10,8 @@ Data comes in CSV files (From Google forms or Survey pal)
 Data comes into a data store with the month and year as the ID.
 Frontend queries the data for different things like:
 
-* Give me all data, sortet by survey period
-* Give me all data by this person, sortet by survey period
+* Give me all data, sorted by survey period
+* Give me all data by this person, sorted by survey period
 * Give me all persons with this keyword in this level
 
 

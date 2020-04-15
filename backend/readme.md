@@ -1,19 +1,19 @@
 # Backend 
 ## Directory Structure
 
-`web/`: http functions, handle http request.
+`data_endpoints/`: http functions, handle http request.
 ## Database
 We use Google Firestore as database
 
 ### DB structure
-- **Collection**: MM/YYYY (The month that the data is being updated), each collection contains responses from all user in one survey.
+- **Collection**: YYYY-MM (The month that the data is being updated), each collection contains responses from all user in one survey.
     - **Document**: Email or name of the user, each document contains the answer of each user in this survey.
 
 ## API endpoints:
 ### Upload survey result
 * **URL:** 
     
-    `\sonar_survey`
+    `/surveys`
 
 * **Method:**
     
@@ -27,7 +27,14 @@ We use Google Firestore as database
 
     Content-Type: `multipart/form-data`
 
-    `{'data': <*.csv file>}`
+    ```
+    
+    {
+      'name': <YYYY-MM>
+      'data': <*.csv file>
+      }
+    
+    ```
 
 * **Success Response:**
 
@@ -37,8 +44,8 @@ We use Google Firestore as database
     ```
     {
         "msg":"Successfully wrote to storage",
-        "names":["Sara Parker-934","Sara Parker-570"],
-        "survey-date":"042020"
+        "persons":["johndone@eficode.com"],
+        "collection":"2020-04"
     }
     ````
  
@@ -49,18 +56,27 @@ We use Google Firestore as database
     ```
     {
         "msg":"File format error, *.csv file required",
-        "names":[],
-        "survey-date":"042020"
+        "persons":[],
+        "collection":"2020-04"
+    }
+    ```
+  * **Code:** 400 Bad Request <br />
+    **Content:** 
+    ```
+    {
+        "msg":"Collection name should be named by survey date (YYYY-MM)",
+        "persons":[],
+        "collection":"2020-04"
     }
     ```
 
 * **Sample Call:**
 
-  curl -F data=@data.csv <root_url>/sonar_survey
+  `curl -F data=@data.csv -F name=<YYYY-MM> <root_url>/surveys`
 
 * **Notes:**
 
-* **Cloud Run:**
-  gcloud builds submit --tag gcr.io/sonar-272913/sonar-survey .
+## Cloud Run Deployment
+  `gcloud builds submit --tag gcr.io/sonar-272913/sonar-survey .`
 
-  gcloud run deploy --image gcr.io/sonar-272913/sonar-survey --platform managed
+  `gcloud run deploy --image gcr.io/sonar-272913/sonar-survey --platform managed`
