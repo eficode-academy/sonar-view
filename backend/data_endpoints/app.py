@@ -65,12 +65,14 @@ def add_sonar_survey(payload):
     return construct_response('Successfully wrote to storage', survey_collection, name_list, payload['name'])
 
 @survey.route('/surveys', methods=['GET'])
-def surveys_names():
+@jwt_required
+def surveys_names(user_info):
     surveys_date = fetch_all_date()
     return surveys_date
 
 @survey.route('/surveys/<id>/persons', methods=['GET'])
-def persons_names(id):
+@jwt_required
+def persons_names(user_info, id):
     each_survey_person_name = fetch_each_survey_person(id)
     return each_survey_person_name
 
