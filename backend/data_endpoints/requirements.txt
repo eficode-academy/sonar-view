@@ -1,5 +1,8 @@
 google-cloud-storage
 google-cloud-logging
+google-auth
 flask
 pytest
+pyjwt
 firebase_admin
+flask_jwt_extended
