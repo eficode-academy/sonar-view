@@ -65,6 +65,7 @@ def add_sonar_survey(payload):
     return construct_response('Successfully wrote to storage', survey_collection, name_list, payload['name'])
 
 @survey.route('/surveys', methods=['GET'])
+<<<<<<< HEAD
 @jwt_required
 def surveys_names(user_info):
     surveys_date = fetch_all_date()
@@ -75,7 +76,55 @@ def surveys_names(user_info):
 def persons_names(user_info, id):
     each_survey_person_name = fetch_each_survey_person(id)
     return each_survey_person_name
+=======
+def surveys_names():
+    try:
+        surveys_date = fetch_all_date()
+        return surveys_date, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
 
+@survey.route('/surveys/<id>/persons', methods=['GET'])
+def persons_names(id):
+    try:
+        each_survey_person_name = fetch_each_survey_person(id)
+        return each_survey_person_name, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+>>>>>>> 8c2a2a5... backend ready version
+
+@survey.route('/surveys/<id>/persons/<name_id>', methods=['GET'])
+def person_detail(id, name_id):
+    try:
+        person_detail = fetch_person_detail(id, name_id) 
+        return (person_detail)
+    except Exception as e:
+        return f"An Error Occured: {e}"
+
+@survey.route('/persons', methods=['GET'])
+def all_person_name():
+    try:
+        get_name = get_names()
+        return get_name, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+
+
+@survey.route('/persons/<id>/surveys', methods=['GET'])
+def all_survey_for_person(id):
+    try:
+        get_survey = get_surveys(id)
+        return get_survey, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+
+@survey.route('/persons/<id>/surveys/<survey_id>', methods=['GET'])
+def all_survey_item(id, survey_id):
+    try:
+        get_survey_item = get_survey_items(id, survey_id)
+        return get_survey_item, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
 
 port = int(os.environ.get('PORT', 8080))
 if __name__ == "__main__":
