@@ -6,7 +6,7 @@ from datetime import date
 from os import path
 from config import CSV_TMP_PATH
 from google.cloud import firestore
-from helper import fetch_all_date, fetch_each_survey_person, csv_to_json, construct_response, is_correct_name
+from helper import fetch_all_date, fetch_each_survey_person, fetch_person_detail, get_names, get_surveys, get_survey_items, csv_to_json, construct_response, is_correct_name
 
 survey = Blueprint('home', __name__, template_folder='templates', static_folder='static')
 
@@ -39,14 +39,52 @@ def add_sonar_survey():
 
 @survey.route('/surveys', methods=['GET'])
 def surveys_names():
-    surveys_date = fetch_all_date()
-    return surveys_date
+    try:
+        surveys_date = fetch_all_date()
+        return surveys_date, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
 
 @survey.route('/surveys/<id>/persons', methods=['GET'])
 def persons_names(id):
-    each_survey_person_name = fetch_each_survey_person(id)
-    return each_survey_person_name
+    try:
+        each_survey_person_name = fetch_each_survey_person(id)
+        return each_survey_person_name, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
 
+@survey.route('/surveys/<id>/persons/<name_id>', methods=['GET'])
+def person_detail(id, name_id):
+    try:
+        person_detail = fetch_person_detail(id, name_id) 
+        return (person_detail)
+    except Exception as e:
+        return f"An Error Occured: {e}"
+
+@survey.route('/persons', methods=['GET'])
+def all_person_name():
+    try:
+        get_name = get_names()
+        return get_name, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+
+
+@survey.route('/persons/<id>/surveys', methods=['GET'])
+def all_survey_for_person(id):
+    try:
+        get_survey = get_surveys(id)
+        return get_survey, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+
+@survey.route('/persons/<id>/surveys/<survey_id>', methods=['GET'])
+def all_survey_item(id, survey_id):
+    try:
+        get_survey_item = get_survey_items(id, survey_id)
+        return get_survey_item, 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
 
 port = int(os.environ.get('PORT', 8080))
 if __name__ == "__main__":

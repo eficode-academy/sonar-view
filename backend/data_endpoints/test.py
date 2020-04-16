@@ -11,6 +11,53 @@ data = {
 "9": "Sara Parker-934"
 }
 for key in data:
-    print(key)
     survey_date = data[key]
-    print(survey_date)
+
+
+survey = {
+"Surveys": [
+{
+"0": "2020-03"
+}
+]
+}
+
+final_survey = {"abc@123.com": survey}
+
+person = {
+"Sara Parker-934": {
+"Email": "Sara Parker-934@eficode.com",
+"Name": "Sara Parker-934",
+"Office": "Helsinki",
+"Team": "DB",
+"survey": [
+{
+"level": "Novice",
+"name": "Git"
+},
+{
+"level": "Intermediate",
+"name": "Docker"
+},
+{
+"level": "Expert",
+"name": "Circleci"
+},
+{
+"level": "Intermediate",
+"name": "Azure Devops"
+},
+{
+"level": "Expert",
+"name": "Robot Framework"
+}]}}
+
+survey_item = person["Sara Parker-934"]["survey"]
+
+survey_items = {}
+survey_items["Survey"] = []
+survey_items["email"] = person["Sara Parker-934"]["Email"]
+survey_items["Survey"].append(survey_item)
+
+
+print(survey_item)

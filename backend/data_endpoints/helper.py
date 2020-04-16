@@ -6,27 +6,84 @@ import re
 from datetime import datetime
 from random import randint
 
+
 client = logging.Client()     
 logger = client.logger('endpoints-logger') 
 
 
 def fetch_all_date():
     db = firestore.Client()
-    surveys = db.collections()
-    surveys_date = {}
-    for index, survey in enumerate(surveys):
-        surveys_date[index]=survey.id
-    return surveys_date
+    survey_collection = db.collections()
+    survey_date = {}
+    for index, survey in enumerate(survey_collection):
+        survey_date[index] = survey.id
+    return survey_date
 
 def fetch_each_survey_person(id):
     db = firestore.Client()
     doc_ref = db.collection(id)
     survey_names = doc_ref.stream()
     each_survey_person = {}
+    each_name = {}
+    each_name["Persons"] = []
     for index, doc in enumerate(survey_names):
         each_survey_person[index] = doc.id
-    each_name = {k: doc_ref.document(email).get().to_dict()['Person'][0]['Name'] for (k, email) in each_survey_person.items()}
+    for (k, email) in each_survey_person.items():
+        each_name["Persons"].append({
+            "email":email,
+            "name":doc_ref.document(email).get().to_dict()['Person'][0]['Name']
+            })
     return each_name
+
+def fetch_person_detail(id, name_id):
+    db = firestore.Client()
+    doc_ref = db.collection(id)
+    person_detail = {name_id: doc_ref.document(name_id).get().to_dict()['Person'][0]}
+    return person_detail
+    
+def get_names():
+    db = firestore.Client()
+    collections_name = fetch_all_date()
+    each_survey_doc = {}
+    each_name = {}
+    each_name["Persons"] = []
+    for item in collections_name:
+        doc_ref = db.collection(collections_name[item])
+        doc_name = doc_ref.stream()
+        for item in doc_name:
+            name_item = doc_ref.document(item.id).get().to_dict()['Person'][0]['Name']
+            if name_item not in each_name.values():
+                each_name["Persons"].append({
+                "email":item.id,
+                "name":name_item
+                })
+    return each_name
+
+def get_surveys(id):
+    db = firestore.Client()
+    collections_name = fetch_all_date()
+    all_name = {}
+    all_name["Surveys"] = []
+    for item in collections_name:
+        doc_ref = db.collection(collections_name[item])
+        doc_name = doc_ref.stream()
+        for index, doc in enumerate(doc_name):
+            if(doc.id == id):
+                all_name["Surveys"].append({
+                    index:collections_name[item]
+                })
+    final_name = {id: all_name}
+    return final_name
+
+def get_survey_items(person_id, survey_id):
+    db = firestore.Client()
+    doc_ref = db.collection(survey_id).document(person_id)
+    survey_items = {}
+    survey_items["Survey"] = []
+    survey_items["email"] = person_id
+    survey_item = doc_ref.get().to_dict()['Person'][0]['survey']
+    survey_items["Survey"].append(survey_item)
+    return survey_items
 
 def is_correct_name(name):
     try:
