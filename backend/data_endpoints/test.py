@@ -178,8 +178,6 @@ namedata = {
 
 
 abc = list({v['email']:v for v in namedata["Persons"]}.values())
-
-
 abcd = {
 "surveys": [
 {
