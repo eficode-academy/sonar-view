@@ -11,8 +11,9 @@ from flask import jsonify, request
 from functools import wraps
 
 
-client = logging.Client()     
-logger = client.logger('endpoints-logger') 
+client = logging.Client()
+logger = client.logger('endpoints-logger')
+
 
 
 def fetch_all_date():
@@ -25,6 +26,7 @@ def fetch_all_date():
             index:survey.id
         }) 
     return survey_date
+  
 
 def fetch_each_survey_person(id):
     db = firestore.Client()
@@ -69,6 +71,7 @@ def get_names():
     all_names["persons"] = list({v['email']:v for v in each_name["persons"]}.values())
     return all_names
 
+
 def get_surveys(id):
     db = firestore.Client()
     collections_name = fetch_all_date()
@@ -87,6 +90,7 @@ def get_surveys(id):
     final_name = {id: all_name}
     return final_name
 
+
 def get_survey_items(person_id, survey_id):
     db = firestore.Client()
     doc_ref = db.collection(survey_id).document(person_id)
@@ -97,12 +101,14 @@ def get_survey_items(person_id, survey_id):
     survey_items["survey"].append(survey_item)
     return survey_items
 
+
 def is_correct_name(name):
     try:
         datetime.strptime(name, '%Y-%m')
         return True
     except ValueError:
         return False
+
 
 def csv_to_json(file_path):
     json_tmp_path = os.path.join(os.path.dirname(file_path), 'sonar.json')
@@ -115,16 +121,16 @@ def csv_to_json(file_path):
     with open(json_tmp_path, 'w') as f:
         json.dump(rows, f)
     with open(json_tmp_path, 'r') as data:
-        json_data = json.load(data) 
+        json_data = json.load(data)
     for item in json_data:
         for key in list(item.keys()):
             if (item[key]==''):
                 del item[key]      
     new_json = []
     for item in json_data:
-        repeat_dict = {} 
+        repeat_dict = {}
         team_dict = {}
-        survey_dict= {}
+        survey_dict = {}
         survey_dict["survey"] = []
         repeat_dict["person"] = []
         for key in list(item.keys()):
@@ -137,11 +143,12 @@ def csv_to_json(file_path):
                     "office":item["Office"],
                     "name":item["Name"],
                 })
-            if (key != "Team" and key != "Email" and key != "Office" and key != "Name" ):
+            if (key != "Team" and key != "Email" and key !=
+                    "Office" and key != "Name"):
                 skills = {}
                 skills.update({
-                    "name":key,
-                    "level":item[key]
+                    "name": key,
+                    "level": item[key]
                 })
                 survey_dict["survey"].append(skills)
         repeat_dict["person"][0].update(survey_dict)
@@ -150,8 +157,18 @@ def csv_to_json(file_path):
     os.remove(file_path)
     return new_json
 
-def construct_response(msg: str, collection: str, name: list, user: str = None):
-    return {'msg': msg, 'collection':collection, 'persons': name, 'current_user': user}
+
+def construct_response(
+        msg: str,
+        collection: str,
+        name: list,
+        user: str = None):
+    return {
+        'msg': msg,
+        'collection': collection,
+        'persons': name,
+        'current_user': user}
+
 
 def is_jwt_valid(headers):
     if not headers.get('Authorization'):
@@ -168,6 +185,7 @@ def is_jwt_valid(headers):
     except jwt.InvalidTokenError as exc:
         return [False, str(exc)]
 
+
 def generate_jwt_token(**kwargs):
     """
     Generates the Auth Token
@@ -182,6 +200,7 @@ def generate_jwt_token(**kwargs):
         )
     except Exception as e:
         return e
+
 
 def jwt_required(fn):
     @wraps(fn)
