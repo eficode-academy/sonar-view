@@ -59,9 +59,9 @@ def add_sonar_survey(payload):
     json_data = csv_to_json(csv_file_path)
     # The collection name is YYYY-MM
     for item in json_data:
-        if item["Person"][0]["Email"]:
+        if item["person"][0]["email"]:
             # Employee Email as document name
-            document_name = item["Person"][0]["Email"]
+            document_name = item["person"][0]["email"]
             name_list.append(document_name)
             # In the db design, we put all answers in a survey as a collection, 
             # each person's answer and a document 
