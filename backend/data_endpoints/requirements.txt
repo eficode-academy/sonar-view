@@ -5,8 +5,5 @@ flask
 pytest
 pyjwt
 firebase_admin
-<<<<<<< HEAD
 flask_jwt_extended
-=======
 flask-cors
->>>>>>> 719a71b... Testing API ENDPOINTS
