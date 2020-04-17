@@ -1,7 +1,8 @@
 import shutil
 import json
 import os
-from flask import Flask, request, Blueprint, jsonify, make_response
+from flask import Flask, request, Blueprint
+from flask_cors import CORS, cross_origin
 from datetime import date
 from os import path
 from config import CSV_TMP_PATH, GSUITE_DOMAIN_NAME, CLIENT_ID
@@ -12,28 +13,7 @@ from google.auth.transport import requests
 
 
 survey = Blueprint('home', __name__, template_folder='templates', static_folder='static')
-google_auth = Blueprint('google_login', __name__)
-
-# Google auth 
-@google_auth.route('/auth', methods=['POST'])
-def authentication():
-    token = request.form.get('token')
-    if not token:
-        raise ValueError('No token')
-    try:
-        # Specify the CLIENT_ID of the app that accesses the backend:
-        id_info = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
-        if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
-        # If auth request is from a G Suite domain (eficode.com or eficode.fi):
-        if id_info['hd'] not in GSUITE_DOMAIN_NAME:
-             raise ValueError('Wrong hosted domain.')
-        # ID token is valid. Get the user's Google Account ID from the decoded token.
-        jwt_token = generate_jwt_token(sub=id_info['sub'], exp=id_info['exp'], iat=id_info['iat'], name=id_info['name'], email=id_info['email'])
-        return jsonify(msg='Login succeed', auth_token=jwt_token.decode())
-    except ValueError as e:
-        # Invalid Google token
-        return make_response(jsonify(msg='Login failed: {}'.format(e)), 401)
+@cross_origin()
 
 # Post a survey
 @survey.route('/surveys', methods=['POST'])
@@ -65,18 +45,6 @@ def add_sonar_survey(payload):
     return construct_response('Successfully wrote to storage', survey_collection, name_list, payload['name'])
 
 @survey.route('/surveys', methods=['GET'])
-<<<<<<< HEAD
-@jwt_required
-def surveys_names(user_info):
-    surveys_date = fetch_all_date()
-    return surveys_date
-
-@survey.route('/surveys/<id>/persons', methods=['GET'])
-@jwt_required
-def persons_names(user_info, id):
-    each_survey_person_name = fetch_each_survey_person(id)
-    return each_survey_person_name
-=======
 def surveys_names():
     try:
         surveys_date = fetch_all_date()
@@ -91,7 +59,6 @@ def persons_names(id):
         return each_survey_person_name, 200
     except Exception as e:
         return f"An Error Occured: {e}"
->>>>>>> 8c2a2a5... backend ready version
 
 @survey.route('/surveys/<id>/persons/<name_id>', methods=['GET'])
 def person_detail(id, name_id):
@@ -129,6 +96,7 @@ def all_survey_item(id, survey_id):
 port = int(os.environ.get('PORT', 8080))
 if __name__ == "__main__":
     app = Flask(__name__)
+    cors = CORS(app)
     app.register_blueprint(survey, url_prefix='/sonar')
     app.register_blueprint(google_auth, url_prefix='/google')
     app.run(threaded=True, host='0.0.0.0', port=port, debug=True)
