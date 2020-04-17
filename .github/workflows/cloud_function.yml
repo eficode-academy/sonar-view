@@ -18,7 +18,7 @@ jobs:
       with: 
         python-version: 3.7
     - name: Install dependencies for web functions
-      working-directory:  ${{env.working-directory}}/web
+      working-directory:  ${{env.working-directory}}/data_endpoints
       run: |
         python3 -m pip install -U pip
         pip3 install -r requirements.txt
