@@ -178,4 +178,21 @@ namedata = {
 
 
 abc = list({v['email']:v for v in namedata["Persons"]}.values())
-print(abc)
+abcd = {
+"surveys": [
+{
+"0": "2020-04"
+},
+{
+"1": "2020-11"
+},
+{
+"2": "2021-04"
+}
+]
+}
+
+for item in abcd['surveys']:
+    coll_list = item.values()
+    coll_name = ''.join(coll_list)
+    print(coll_name)

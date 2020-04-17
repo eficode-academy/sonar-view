@@ -1,6 +1,7 @@
 import shutil
 import json
 import os
+
 from flask import Flask, request, Blueprint, make_response, jsonify
 from flask_cors import CORS, cross_origin
 from datetime import date
@@ -8,9 +9,9 @@ from os import path
 from config import CSV_TMP_PATH, GSUITE_DOMAIN_NAME, CLIENT_ID
 from google.cloud import firestore
 from helper import *
-
 from google.oauth2 import id_token
 from google.auth.transport import requests
+
 
 google_auth = Blueprint('google_login', __name__)
 survey = Blueprint(
@@ -48,6 +49,7 @@ def authentication():
         # Invalid Google token
         return make_response(jsonify(msg='Login failed: {}'.format(e)), 401)
 
+
 # Post a survey
 @survey.route('/surveys', methods=['POST'])
 # Here's a example When turn on JWT authentication, replace def add_sonar_survey with the code below:
@@ -73,9 +75,9 @@ def add_sonar_survey():
     json_data = csv_to_json(csv_file_path)
     # The collection name is YYYY-MM
     for item in json_data:
-        if item["Person"][0]["Email"]:
+        if item["person"][0]["email"]:
             # Employee Email as document name
-            document_name = item["Person"][0]["Email"]
+            document_name = item["person"][0]["email"]
             name_list.append(document_name)
             # In the db design, we put all answers in a survey as a collection,
             # each person's answer and a document
@@ -109,11 +111,10 @@ def persons_names(id):
 @survey.route('/surveys/<id>/persons/<name_id>', methods=['GET'])
 def person_detail(id, name_id):
     try:
-        person_detail = fetch_person_detail(id, name_id)
+        person_detail = fetch_person_detail(id, name_id) 
         return (person_detail)
     except Exception as e:
         return f"An Error Occured: {e}"
-
 
 @survey.route('/persons', methods=['GET'])
 def all_person_name():
@@ -132,7 +133,6 @@ def all_survey_for_person(id):
     except Exception as e:
         return f"An Error Occured: {e}"
 
-
 @survey.route('/persons/<id>/surveys/<survey_id>', methods=['GET'])
 def all_survey_item(id, survey_id):
     try:
@@ -140,7 +140,6 @@ def all_survey_item(id, survey_id):
         return get_survey_item, 200
     except Exception as e:
         return f"An Error Occured: {e}"
-
 
 port = int(os.environ.get('PORT', 8080))
 if __name__ == "__main__":
