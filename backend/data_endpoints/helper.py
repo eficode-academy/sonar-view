@@ -46,18 +46,20 @@ def get_names():
     collections_name = fetch_all_date()
     each_survey_doc = {}
     each_name = {}
+    all_names = {}
+    all_names["Persons"] = []
     each_name["Persons"] = []
     for item in collections_name:
         doc_ref = db.collection(collections_name[item])
         doc_name = doc_ref.stream()
         for item in doc_name:
             name_item = doc_ref.document(item.id).get().to_dict()['Person'][0]['Name']
-            if name_item not in each_name.values():
-                each_name["Persons"].append({
+            each_name["Persons"].append({
                 "email":item.id,
                 "name":name_item
-                })
-    return each_name
+            })
+    all_names["Persons"] = list({v['email']:v for v in each_name["Persons"]}.values())
+    return all_names
 
 def get_surveys(id):
     db = firestore.Client()
@@ -105,11 +107,11 @@ def csv_to_json(file_path):
     with open(json_tmp_path, 'r') as data:
         json_data = json.load(data) 
     for item in json_data:
-        if item['Name']:
-            item['Name'] = "Sara Parker-"+str(randint(100, 999))
-            item['Email'] = item['Name']+"@eficode.com"
+        # if item['Name']:
+        #     item['Name'] = "Sara Parker-"+str(randint(100, 999))
+        #     item['Email'] = item['Name']+"@eficode.com"
         for key in list(item.keys()):
-            if (item[key]=='' or item[key]=="Don't know it"):
+            if (item[key]==''):
                 del item[key]      
     new_json = []
     for item in json_data:

@@ -3,3 +3,4 @@ google-cloud-logging
 flask
 pytest
 firebase_admin
+flask-cors

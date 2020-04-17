@@ -2,6 +2,7 @@ import shutil
 import json
 import os
 from flask import Flask, request, Blueprint
+from flask_cors import CORS, cross_origin
 from datetime import date
 from os import path
 from config import CSV_TMP_PATH
@@ -9,6 +10,7 @@ from google.cloud import firestore
 from helper import fetch_all_date, fetch_each_survey_person, fetch_person_detail, get_names, get_surveys, get_survey_items, csv_to_json, construct_response, is_correct_name
 
 survey = Blueprint('home', __name__, template_folder='templates', static_folder='static')
+@cross_origin()
 
 # Post a survey
 @survey.route('/surveys', methods=['POST'])
@@ -89,5 +91,6 @@ def all_survey_item(id, survey_id):
 port = int(os.environ.get('PORT', 8080))
 if __name__ == "__main__":
     app = Flask(__name__)
+    cors = CORS(app)
     app.register_blueprint(survey, url_prefix='/sonar')
     app.run(threaded=True, host='0.0.0.0', port=port, debug=True)
