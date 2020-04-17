@@ -6,3 +6,4 @@ pytest
 pyjwt
 firebase_admin
 flask_jwt_extended
+flask-cors
