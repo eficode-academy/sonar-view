@@ -11,6 +11,7 @@ module.exports = {
   resolve: {
     extensions: ["*", ".js", ".jsx"],
   },
+  devtool: "source-map",
   entry: "./src/index.js",
   output: {
     path: __dirname + "/public",
@@ -21,7 +22,10 @@ module.exports = {
     contentBase: "./public",
     port: 3000,
     host: "localhost",
-    historyApiFallback: true,
+    historyApiFallback: {
+      disableDotRule: true,
+    },
     disableHostCheck: true,
+    hot: true,
   },
 };
