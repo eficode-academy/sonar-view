@@ -16,9 +16,11 @@
     "sourceType": "module"
   },
   "plugins": ["react"],
+  "parser": "babel-eslint",
   "rules": {
     "semi": ["error", "always"],
     "comma-dangle": ["error", "always-multiline"],
+    "react/prop-types": [2, { "ignore": ["children"] }],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/jsx-props-no-spreading": [
       0,

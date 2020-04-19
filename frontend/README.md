@@ -53,3 +53,24 @@ const StyledDiv = styled.div `
     `
 `
 ```
+
+### Linting
+
+Linting is checked on any commit. To run linting separately, run:
+
+```sh
+npm run lint
+```
+
+or
+
+```sh
+yarn lint
+```
+
+### TODO:
+
+- Add proper state management
+- Rethink sidebar structure
+- Add filtering to sidebar
+- Fetch and display user's other answered surveys
