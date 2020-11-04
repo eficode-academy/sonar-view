@@ -3,8 +3,11 @@ import ReactDOM from "react-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { BrowserRouter } from "react-router-dom";
 import Store from "./hooks/Store";
-import Wrapper from "./containers/Wrapper";
 import theme from "./utils/theme";
+
+import Login from './components/login/Login';
+import Logout from './components/login/Logout';
+
 
 const Sonar = () => {
   const GlobalStyle = createGlobalStyle`
@@ -24,10 +27,13 @@ const Sonar = () => {
       <BrowserRouter>
         <ThemeProvider theme={theme}>
           <GlobalStyle />
-          <Wrapper />
+
+          <Login />
+
         </ThemeProvider>
       </BrowserRouter>
     </Store>
   );
 };
+
 ReactDOM.render(<Sonar />, document.getElementById("app"));

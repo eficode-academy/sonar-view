@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import NavLink from "./NavLink";
 import Logo from "./Logo";
+import Logout from "./login/Logout";
 
 const Wrapper = styled.div`
   padding: 20px 40px;
@@ -109,6 +110,9 @@ function Sidebar({ match, data, isLoading }) {
               );
             })}
         </Flex>
+
+        <Logout />
+        
       </Wrapper>
     </>
   );
