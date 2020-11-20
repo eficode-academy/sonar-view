@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect, useReducer } from "react";
 import PropTypes from "prop-types";
 import { Flex } from "rebass";
 import { Switch, Route } from "react-router-dom";
 import Home from "../components/Home";
-import Main from "../components/Main";
+import StudyDetails from "../components/StudyDetails";
 import Person from "../components/Person";
 import SidebarWrapper from "./SidebarWrapper";
+import LoginHooks from '../hooks/LoginHooks';
+import Unauthorized from "../components/Unauthorized";
+
+import { render } from "react-dom";
+import { hasRole, isAllowed } from '../auth/auth';
+
+import { getUserInformation } from "../hooks/utils/refreshToken";
+import userSubject from "../components/UserSubject";
+
+const SET_USER = 'SET_USER';
+const userReducer = (user, action) => {
+  if (action == SET_USER) {
+    return action.user;
+  }
+  return user;
+} 
+
+
 
 export const Layout = ({ component: Component, route }) => {
   return (
@@ -23,19 +41,59 @@ Layout.propTypes = {
   component: PropTypes.func.isRequired,
 };
 
-function Wrapper() {
+export function Wrapper() {
   const layoutRender = (component) => (route) => (
     <Layout component={component} route={route} />
   );
 
+  const [user, dispatch] = useReducer(userReducer, getUserInformation());
+  const onUserUpdated = (user) => {
+    dispatch({
+      action: SET_USER,
+      user
+    })
+
+    console.log("called");
+  };
+
+
+  useEffect(() => {
+    //  Fetch from State
+    userSubject.attach(onUserUpdated);
+
+    // detach when unmount
+    return () => {
+      userSubject.detach(onUserUpdated);
+    }
+  });
+
+  userSubject.updateUser();
+  console.log(user);
+
   return (
-    <Switch>
-      <Route path="/" exact render={layoutRender(Home)} />
-      <Route exact path="/surveys/:date" render={layoutRender(Main)} />
-      <Route path="/surveys/:date/:email" render={layoutRender(Person)} />
+    <Switch id='switch'> 
+      {/* <Route path="/" render={layoutRender(Home)} exact /> */}
+
+      {hasRole(user, ['eficodean']) && <Route path="/surveys/:date/:email" render={layoutRender(Person)} /> }
+      {hasRole(user, ['eficodean']) && <Route path="/surveys/:date" render={layoutRender(StudyDetails)} exact /> }
+      {hasRole(user, ['eficodean']) && <Route path="/" render={layoutRender(Home)} exact /> }
+
+      {/* Add page for guest users (non eficodeans) */}
+      {hasRole(user, ['guest']) && <Route path="/" render={() => <LoginHooks/>} exact /> }
+      {hasRole(user, ['unauthorized']) && <Route path="/" render={Unauthorized} exact /> }
+
+      {/* <Route render={() => <LoginHooks/>} /> */}
+
       <Route render={() => <h1>404: page not found</h1>} />
     </Switch>
   );
+
 }
 
 export default Wrapper;
+
+// window.addEventListener('storage', function(e) { 
+//   console.log('Works')
+//   let newuser = getUserInformation();
+//   onUserUpdated(newuser);
+//  });

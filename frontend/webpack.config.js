@@ -27,5 +27,5 @@ module.exports = {
     },
     disableHostCheck: true,
     hot: true,
-  },
+  }
 };

@@ -6,16 +6,18 @@ import Store from "../../hooks/Store";
 import theme from "../../utils/theme";
 
 import { GoogleLogin } from 'react-google-login';
+
 // refresh token
 import { refreshTokenSetup } from './utils/refreshToken';
 
 import Wrapper from "../../containers/Wrapper";
 import Logout from './Logout';
 
-const clientId = process.env.GOOGLE_KEY;
+// const clientId = process.env.REACT_APP_GOOGLE_KEY;
+const clientId = "20840044614-h4k2pdffbgumpqvri0g1sv5mn4q61q71.apps.googleusercontent.com";
 
 function Login() {
-    
+
   const onSuccess = (res) => {
     console.log('Login Success: currentUser:', res.profileObj);
     alert(
@@ -26,30 +28,30 @@ function Login() {
     if(res.profileObj.email.includes('@eficode.com')) {
 
       const Sonar = () => {
-      const GlobalStyle = createGlobalStyle`
-      body {
-        padding: 0;
-        margin: 0;
-        font-family: ${theme.font};
-        color: ${theme.colors.black};
-        * {
+        const GlobalStyle = createGlobalStyle`
+        body {
+          padding: 0;
+          margin: 0;
           font-family: ${theme.font};
           color: ${theme.colors.black};
-        }
-      } `;
+          * {
+            font-family: ${theme.font};
+            color: ${theme.colors.black};
+          }
+        } `;
 
-      return (
-        <Store>
-          <BrowserRouter>
-            <ThemeProvider theme={theme}>
-              <GlobalStyle />
+        return (
+          <Store>
+            <BrowserRouter>
+              <ThemeProvider theme={theme}>
+                <GlobalStyle />
 
-              <Wrapper />
+                <Wrapper />
 
-            </ThemeProvider>
-          </BrowserRouter>
-        </Store>
-      );
+              </ThemeProvider>
+            </BrowserRouter>
+          </Store>
+        );
       };
       ReactDOM.render(<Sonar />, document.getElementById("app"));
       
@@ -95,7 +97,7 @@ function Login() {
   };
 
   return (
-    <div>
+    <>
       <GoogleLogin
         clientId={clientId}
         buttonText="Login"
@@ -105,7 +107,7 @@ function Login() {
         style={{ marginTop: '100px' }}
         isSignedIn={true}
       />
-    </div>
+    </>
   );
 }
 

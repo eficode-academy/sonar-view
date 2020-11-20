@@ -1,15 +1,13 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router} from "react-router-dom";
 import Store from "./hooks/Store";
 import theme from "./utils/theme";
+import Wrapper from './containers/Wrapper';
 
-import Login from './components/login/Login';
-import Logout from './components/login/Logout';
+import { render } from "react-dom";
 
-
-const Sonar = () => {
+const Sonar = ( ) => {
   const GlobalStyle = createGlobalStyle`
   body {
     padding: 0;
@@ -24,16 +22,14 @@ const Sonar = () => {
 
   return (
     <Store>
-      <BrowserRouter>
+      <Router>
         <ThemeProvider theme={theme}>
           <GlobalStyle />
-
-          <Login />
-
+          <Wrapper />
         </ThemeProvider>
-      </BrowserRouter>
+      </Router>
     </Store>
   );
 };
 
-ReactDOM.render(<Sonar />, document.getElementById("app"));
+render(<Sonar />, document.getElementById("app"));

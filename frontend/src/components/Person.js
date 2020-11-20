@@ -23,9 +23,13 @@ function Person({ match }) {
     advanced: 4,
     expert: 5,
   };
-  if (isLoading) return <div>Loading...</div>;
+
+  if (isLoading) 
+    return <div>Loading...</div>;
+
   if (!isLoading) {
     return (
+      <>
       <Flex
         p={["30px", "60px"]}
         width={["94%", "94%", "94%", "60%"]}
@@ -82,6 +86,7 @@ function Person({ match }) {
           ))}
         </Box>
       </Flex>
+      </>
     );
   }
 }

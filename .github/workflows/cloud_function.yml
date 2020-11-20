@@ -13,21 +13,41 @@ jobs:
         working-directory: ./backend
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3
-      uses: actions/setup-python@v1
-      with: 
-        python-version: 3.7
-    - name: Install dependencies for web functions
-      working-directory:  ${{env.working-directory}}/data_endpoints
-      run: |
-        python3 -m pip install -U pip
-        pip3 install -r requirements.txt
-    - name: Lint with flake8
-      working-directory:  ${{env.working-directory}} 
-      run: |
-        pip install flake8
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+
+    # Build image
+
+    # Upload to Github Packages
+
+
+    - name: Deploy service to Cloud Run
+      uses: stefda/action-cloud-run@v1.0
+      with:
+        image: gcr.io/[your-project]/[image]
+        service: [your-service]
+        project: [your-project]
+        region: [gcp-region]
+        env: [path-to-env-file]
+        service key: ${{ secrets.GCLOUD_AUTH }}
+
+    # - name: Set up Python 3
+    #   uses: actions/setup-python@v1
+    #   with: 
+    #     python-version: 3.7
+
+    # - name: Install dependencies for web functions
+    #   working-directory:  ${{env.working-directory}}/data_endpoints
+    #   run: |
+    #     python3 -m pip install -U pip
+    #     pip3 install -r requirements.txt
+    # - name: Lint with flake8
+    #   working-directory:  ${{env.working-directory}} 
+    #   run: |
+    #     pip install flake8
+    #     # stop the build if there are Python syntax errors or undefined names
+    #     flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+
     # - name: test with pytest
     #   working-directory: ${{env.working-directory}}/test
     #   run: |
