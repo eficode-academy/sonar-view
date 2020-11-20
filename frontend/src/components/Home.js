@@ -5,8 +5,8 @@ function Home() {
 
   return ( 
     <>
-    <p>Home: Landing screen. Information about recent studies etc and courses in Eficode Academy</p>
-    <LogoutHooks />
+      <p>Home: Landing screen. Information about recent studies etc and courses in Eficode Academy</p>
+      <LogoutHooks />
     </>
   );
 }

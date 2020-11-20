@@ -2,7 +2,7 @@
 export const refreshTokenSetup = (res) => {
     // Timing to renew access token
 
-    console.log(res);
+    // console.log(res);
 
     // Extract information about user and save as State
     let mail = res.profileObj.email;

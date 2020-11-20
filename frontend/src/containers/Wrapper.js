@@ -9,21 +9,18 @@ import SidebarWrapper from "./SidebarWrapper";
 import LoginHooks from '../hooks/LoginHooks';
 import Unauthorized from "../components/Unauthorized";
 
-import { render } from "react-dom";
-import { hasRole, isAllowed } from '../auth/auth';
+import { hasRole } from '../auth/auth';
 
 import { getUserInformation } from "../hooks/utils/refreshToken";
 import userSubject from "../components/UserSubject";
 
 const SET_USER = 'SET_USER';
 const userReducer = (user, action) => {
-  if (action == SET_USER) {
+  if (action === SET_USER) {
     return action.user;
   }
   return user;
-} 
-
-
+}; 
 
 export const Layout = ({ component: Component, route }) => {
   return (
@@ -41,21 +38,18 @@ Layout.propTypes = {
   component: PropTypes.func.isRequired,
 };
 
-export function Wrapper() {
+function Wrapper() {
   const layoutRender = (component) => (route) => (
     <Layout component={component} route={route} />
   );
 
   const [user, dispatch] = useReducer(userReducer, getUserInformation());
-  const onUserUpdated = (user) => {
+  const onUserUpdated = (newUser) => {
     dispatch({
       action: SET_USER,
-      user
-    })
-
-    console.log("called");
+      newUser,
+    });
   };
-
 
   useEffect(() => {
     //  Fetch from State
@@ -64,36 +58,24 @@ export function Wrapper() {
     // detach when unmount
     return () => {
       userSubject.detach(onUserUpdated);
-    }
+    };
   });
 
-  userSubject.updateUser();
-  console.log(user);
+  userSubject.updateUser(); // enable observer pattern
 
   return (
     <Switch id='switch'> 
-      {/* <Route path="/" render={layoutRender(Home)} exact /> */}
-
       {hasRole(user, ['eficodean']) && <Route path="/surveys/:date/:email" render={layoutRender(Person)} /> }
       {hasRole(user, ['eficodean']) && <Route path="/surveys/:date" render={layoutRender(StudyDetails)} exact /> }
       {hasRole(user, ['eficodean']) && <Route path="/" render={layoutRender(Home)} exact /> }
 
       {/* Add page for guest users (non eficodeans) */}
-      {hasRole(user, ['guest']) && <Route path="/" render={() => <LoginHooks/>} exact /> }
+      {hasRole(user, ['guest']) && <Route path="/" render={() => <LoginHooks />} exact /> }
       {hasRole(user, ['unauthorized']) && <Route path="/" render={Unauthorized} exact /> }
-
-      {/* <Route render={() => <LoginHooks/>} /> */}
 
       <Route render={() => <h1>404: page not found</h1>} />
     </Switch>
   );
-
 }
 
 export default Wrapper;
-
-// window.addEventListener('storage', function(e) { 
-//   console.log('Works')
-//   let newuser = getUserInformation();
-//   onUserUpdated(newuser);
-//  });

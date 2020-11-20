@@ -30,62 +30,62 @@ function Person({ match }) {
   if (!isLoading) {
     return (
       <>
-      <Flex
-        p={["30px", "60px"]}
-        width={["94%", "94%", "94%", "60%"]}
-        justifyContent={["space-between"]}
-        alignItems="center"
-        flexWrap="wrap"
-        sx={{ border: `1px solid ${theme.colors.lightGrey}` }}
-        fontSize="14px"
-      >
-        <Box>
-          <FontAwesomeIcon icon={faUser} size="7x" />
-        </Box>
-        <Box pt={["10px", 0]}>
-          <Text>
-            Name:
-            {personDetails[email]?.name}
-          </Text>
-          <Text>
-            Email:
-            {personDetails[email]?.email}
-          </Text>
-          <Text>
-            Office:
-            {personDetails[email]?.office}
-          </Text>
-          <Text>
-            Team:
-            {personDetails[email]?.team}
-          </Text>
-        </Box>
-        <Box width="100%" mt="30px">
-          {personDetails[email]?.survey.map((s) => (
-            <Flex key={s.name} my="10px" alignItems="center">
-              <Box width="30%">
-                <Text>
-                  {s.name}
-                  {' '}
-                </Text>
-              </Box>
-              <Box
-                ml="30px"
-                bg="white"
-                width="70%"
-                sx={{ border: `1px solid ${theme.colors.lightGrey}` }}
-              >
+        <Flex
+          p={["30px", "60px"]}
+          width={["94%", "94%", "94%", "60%"]}
+          justifyContent={["space-between"]}
+          alignItems="center"
+          flexWrap="wrap"
+          sx={{ border: `1px solid ${theme.colors.lightGrey}` }}
+          fontSize="14px"
+        >
+          <Box>
+            <FontAwesomeIcon icon={faUser} size="7x" />
+          </Box>
+          <Box pt={["10px", 0]}>
+            <Text>
+              Name:
+              {personDetails[email]?.name}
+            </Text>
+            <Text>
+              Email:
+              {personDetails[email]?.email}
+            </Text>
+            <Text>
+              Office:
+              {personDetails[email]?.office}
+            </Text>
+            <Text>
+              Team:
+              {personDetails[email]?.team}
+            </Text>
+          </Box>
+          <Box width="100%" mt="30px">
+            {personDetails[email]?.survey.map((s) => (
+              <Flex key={s.name} my="10px" alignItems="center">
+                <Box width="30%">
+                  <Text>
+                    {s.name}
+                    {' '}
+                  </Text>
+                </Box>
                 <Box
-                  p="6px"
-                  bg={theme.colors.green}
-                  width={levels[s.level.toLowerCase()] / PROFICIENCY_LEVELS}
-                  height="25px"
-                />
-              </Box>
-            </Flex>
+                  ml="30px"
+                  bg="white"
+                  width="70%"
+                  sx={{ border: `1px solid ${theme.colors.lightGrey}` }}
+                >
+                  <Box
+                    p="6px"
+                    bg={theme.colors.green}
+                    width={levels[s.level.toLowerCase()] / PROFICIENCY_LEVELS}
+                    height="25px"
+                  />
+                </Box>
+              </Flex>
           ))}
-        </Box>
-      </Flex>
+          </Box>
+        </Flex>
       </>
     );
   }
