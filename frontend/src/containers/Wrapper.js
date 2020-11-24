@@ -63,7 +63,7 @@ function Wrapper() {
   
   // default state
   if(user.role === null) {
-    clearToken()
+    clearToken();
   }
 
   return (

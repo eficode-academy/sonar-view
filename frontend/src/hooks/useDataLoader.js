@@ -19,7 +19,7 @@ const useDataLoader = (query, type) => {
           headers: new Headers({
             'Access-Control-Allow-Origin': '*',
             'Authorization': `Bearer ${ localStorage.getItem('signedAuthToken')}`, 
-          })
+          }),
         });
         const response = await responseObj;
         const json = await response.json();

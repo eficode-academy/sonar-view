@@ -2,7 +2,7 @@ import React from 'react';
 import { useGoogleLogin } from 'react-google-login';
 import { refreshTokenSetup } from './utils/refreshToken';
 
-const clientId = process.env.REACT_APP_GOOGLEKEY
+const clientId = process.env.REACT_APP_GOOGLEKEY;
 
 function LoginHooks() {
   const onSuccess = (res) => {

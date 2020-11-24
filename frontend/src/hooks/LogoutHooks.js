@@ -3,7 +3,7 @@ import { useGoogleLogout } from 'react-google-login';
 
 import { clearToken } from './utils/refreshToken';
 
-const clientId = process.env.REACT_APP_GOOGLEKEY
+const clientId = process.env.REACT_APP_GOOGLEKEY;
 
 function LogoutHooks() {
   const onLogoutSuccess = () => {
