@@ -8,10 +8,8 @@ import Person from "../components/Person";
 import SidebarWrapper from "./SidebarWrapper";
 import LoginHooks from '../hooks/LoginHooks';
 import Unauthorized from "../components/Unauthorized";
-
 import { hasRole } from '../auth/auth';
-
-import { getUserInformation } from "../hooks/utils/refreshToken";
+import { clearToken, getUserInformation } from "../hooks/utils/refreshToken";
 import userSubject from "../components/UserSubject";
 
 const SET_USER = 'SET_USER';
@@ -65,7 +63,7 @@ function Wrapper() {
   
   // default state
   if(user.role === null) {
-    user.role = 'guest';
+    clearToken()
   }
 
   return (
@@ -79,6 +77,7 @@ function Wrapper() {
       {hasRole(user, ['unauthorized']) && <Route path="/" render={Unauthorized} exact /> }
 
       <Route render={() => <h1>404: page not found</h1>} />
+      
     </Switch>
   );
 }

@@ -18,7 +18,7 @@ const Sonar = ( ) => {
       font-family: ${theme.font};
       color: ${theme.colors.black};
     }
-  } `;
+  }`;
 
   return (
     <Store>

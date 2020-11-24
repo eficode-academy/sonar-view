@@ -11,13 +11,13 @@ on:
       - v*
 
     paths:
-      - 'frontend/*'
+      - 'backend/*'
 
   # Run tests for any PRs.
   pull_request:
 
 env:
-  IMAGE_NAME: sonar_frontend
+  IMAGE_NAME: sonar_backend
 
 jobs:
   # Run tests.
@@ -34,7 +34,7 @@ jobs:
             docker-compose --file docker-compose.test.yml build
             docker-compose --file docker-compose.test.yml run sut
           else
-            docker build frontend/ --file frontend/Dockerfile
+            docker build backend/data-endpoints --file backend/data-endpoints/Dockerfile
           fi
 
   # Push image to GitHub Packages.
@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build frontend/ --file frontend/Dockerfile --tag $IMAGE_NAME
+        run: docker build backend/data-endpoints --file backend/data-endpoints/Dockerfile --tag $IMAGE_NAME
 
       - name: Log into Github Packages
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin

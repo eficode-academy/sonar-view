@@ -2,17 +2,12 @@ import React from 'react';
 import { useGoogleLogout } from 'react-google-login';
 
 import { clearToken } from './utils/refreshToken';
-import { refreshPage } from './utils/refreshPage';
 
-const clientId =
-  '20840044614-h4k2pdffbgumpqvri0g1sv5mn4q61q71.apps.googleusercontent.com';
+const clientId = process.env.REACT_APP_GOOGLEKEY
 
 function LogoutHooks() {
   const onLogoutSuccess = () => {
-    // console.log('Logged out Success');
-    // alert('Logged out Successfully ✌');
     clearToken();
-    refreshPage();
   };
 
   const onFailure = () => {

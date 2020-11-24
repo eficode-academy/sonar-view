@@ -1,6 +1,7 @@
-import { string } from "prop-types";
-import { useEffect, useContext } from "react";
 import { refreshPage } from './refreshPage';
+
+import { useEffect, useContext } from "react";
+import { Context } from "../Store";
 
 export const refreshTokenSetup = (res) => {
     // Timing to renew access token
@@ -43,20 +44,26 @@ export const refreshTokenSetup = (res) => {
 
   };
 
-const SignToken = async (tokenObj) => {
-  const authUrl = 'http://localhost:8080/google/auth';
-  console.log(tokenObj)
-  const responseObj = fetch(authUrl, { 
-    method: 'post', 
-    headers: new Headers({
-      'Authorization': 'Bearer '+ tokenObj, 
-    })
-  });
+async function SignToken(tokenObj) {
+  const url = process.env.REACT_APP_URL
+  const query = `auth`
+  const authUrl = `${url}/${query}`;
+  
+  try {
+    const responseObj = fetch(authUrl, { 
+      method: 'post', 
+      headers: new Headers({
+        'Authorization': 'Bearer '+ tokenObj, 
+      })
+    });
+    const response = await responseObj;
+    const signedToken = (await response.json())['auth_token']
+    localStorage.setItem('signedAuthToken', signedToken)
+    refreshPage()
+  } catch (error) {
+    clearUserInfo();
+  }
 
-  const response = await responseObj;
-  const signedToken = (await response.json())['auth_token']
-  localStorage.setItem('signedAuthToken', signedToken)
-  refreshPage()
 }
 
 export const getUserInformation = () => {
@@ -67,10 +74,18 @@ export const getUserInformation = () => {
   };
 };
 
+const clearUserInfo = () => {
+  localStorage.setItem('user_email', '')
+  localStorage.setItem('user_name', '')
+  localStorage.setItem('user_role', 'guest')
+}
+
 export const clearToken = (res) => {
-  localStorage.setItem('signedAuthToken', '[Token removed by logout]');
-  localStorage.setItem('authToken', '[Token removed by logout]');
-  localStorage.setItem('user_email', '');
-  localStorage.setItem('user_name', '');
-  localStorage.setItem('user_role', 'guest');
+  localStorage.setItem('signedAuthToken', '[Token removed by logout]')
+  localStorage.setItem('authToken', '[Token removed by logout]')
+  clearUserInfo()
+
+  // Enable oberser pattern
+
+  refreshPage()
 };

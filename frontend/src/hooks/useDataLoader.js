@@ -1,5 +1,6 @@
 import { useEffect, useContext } from "react";
 import { Context } from "./Store";
+import { clearToken } from "./utils/refreshToken";
 
 const useDataLoader = (query, type) => {
   // const baseUrl = `https://sonar-survey-rioz6g7rrq-lz.a.run.app/sonar/${query}`;
@@ -15,12 +16,10 @@ const useDataLoader = (query, type) => {
       try {
 
         const responseObj = fetch(baseUrl, { 
-          // method: 'get', 
           headers: new Headers({
             'Access-Control-Allow-Origin': '*',
             'Authorization': `Bearer ${ localStorage.getItem('signedAuthToken')}`, 
-          }),
-          // body: 'A=1&B=2'
+          })
         });
         const response = await responseObj;
         const json = await response.json();
@@ -33,6 +32,7 @@ const useDataLoader = (query, type) => {
         }
       } catch (error) {
         if (!didCancel) {
+          clearToken();
           dispatch({ type: `FETCH_${type}_FAILURE`, error });
         }
       }

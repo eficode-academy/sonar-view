@@ -182,4 +182,3 @@ if __name__ == "__main__":
     # app.register_blueprint(survey, url_prefix='/sonar')
     app.register_blueprint(google_auth, url_prefix='/google')
     app.run(threaded=True, host='0.0.0.0', port=port, debug=True)
-
