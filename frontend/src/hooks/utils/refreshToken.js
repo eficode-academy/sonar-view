@@ -1,8 +1,8 @@
+import { string } from "prop-types";
+import { useEffect, useContext } from "react";
 
 export const refreshTokenSetup = (res) => {
     // Timing to renew access token
-
-    // console.log(res);
 
     // Extract information about user and save as State
     let mail = res.profileObj.email;
@@ -12,6 +12,9 @@ export const refreshTokenSetup = (res) => {
     if (eficodean)
       role = "eficodean";
 
+    // console.log(res.tokenObj.id_token.toString('base64'))
+
+    localStorage.setItem('authToken', res.tokenObj.id_token.toString('base64'))
     localStorage.setItem('user_email', mail);
     localStorage.setItem('user_name', name);
     localStorage.setItem('user_role', role);
@@ -22,16 +25,40 @@ export const refreshTokenSetup = (res) => {
       const newAuthRes = await res.reloadAuthResponse();
       refreshTiming = (newAuthRes.expires_in || 3600 - 5 * 60) * 1000;
       console.log('newAuthRes:', newAuthRes);
+
       // saveUserToken(newAuthRes.access_token);  <-- save new token
       localStorage.setItem('authToken', newAuthRes.id_token);
 
       // Setup the other timer after the first one
       setTimeout(refreshToken, refreshTiming);
+
+      // Query backend for signed token
+      await SignToken(newAuthRes.id_token)
+
     };
-  
+    
+    SignToken(res.tokenObj.id_token)
+
     // Setup first refresh timer
     setTimeout(refreshToken, refreshTiming);
+
   };
+
+const SignToken = async (tokenObj) => {
+  const authUrl = 'http://localhost:8080/google/auth';
+  console.log(tokenObj)
+  const responseObj = fetch(authUrl, { 
+    method: 'post', 
+    headers: new Headers({
+      'Authorization': 'Bearer '+ tokenObj, 
+    })
+  });
+
+  const response = await responseObj;
+  const signedToken = (await response.json())['auth_token']
+  localStorage.setItem('signedAuthToken', signedToken)
+
+}
 
 export const getUserInformation = () => {
   return {
@@ -42,6 +69,7 @@ export const getUserInformation = () => {
 };
 
 export const clearToken = (res) => {
+  localStorage.setItem('signedAuthToken', '[Token removed by logout]');
   localStorage.setItem('authToken', '[Token removed by logout]');
   localStorage.setItem('user_email', '');
   localStorage.setItem('user_name', '');

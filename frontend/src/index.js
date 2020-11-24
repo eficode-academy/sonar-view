@@ -32,4 +32,4 @@ const Sonar = ( ) => {
   );
 };
 
-render(<Sonar />, document.getElementById("app"));
+render(<Sonar crossorigin />, document.getElementById("app"));

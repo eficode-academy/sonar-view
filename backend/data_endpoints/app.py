@@ -12,17 +12,34 @@ from helper import *
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
+
 
 google_auth = Blueprint('google_login', __name__)
-survey = Blueprint(
-    'home', __name__, template_folder='templates', static_folder='static')
 @cross_origin()
+
+# survey = Blueprint(
+#     'home', __name__, ) # template_folder='templates', static_folder='static')
+# @cross_origin()
 
 
 # Google auth
 @google_auth.route('/auth', methods=['POST'])
+@cross_origin()
 def authentication():
-    token = request.form.get('token')
+    # print("Content of req")
+
+    # print(request.get_data())
+    # print(request.headers)
+    # print(request.headers.get("Authorization"))
+    # print(request.headers.get('Authorization'))
+    # print(request.headers.get('Content-Type'))
+
+    token = request.headers.get("Authorization").split(' ')[1]
+    # token = request.form.get('token')
     if not token:
         raise ValueError('No token')
     try:
@@ -50,11 +67,12 @@ def authentication():
         return make_response(jsonify(msg='Login failed: {}'.format(e)), 401)
 
 # Post a survey
-@survey.route('/surveys', methods=['POST'])
+@google_auth.route('/surveys', methods=['POST'])
 # Here's a example When turn on JWT authentication, replace def add_sonar_survey with the code below:
-# @jwt_required
 # def add_sonar_survey(payload):
 #     user_info = payload
+@jwt_required
+@cross_origin()
 def add_sonar_survey():
     name_list = []
     db = firestore.Client()
@@ -89,7 +107,9 @@ def add_sonar_survey():
         # ,payload['name'])
 
 
-@survey.route('/surveys', methods=['GET'])
+@google_auth.route('/surveys', methods=['GET'])
+@jwt_required
+@cross_origin()
 def surveys_names():
     try:
         surveys_date = fetch_all_date()
@@ -98,16 +118,19 @@ def surveys_names():
         return f"An Error Occured: {e}"
 
 
-@survey.route('/surveys/<id>/persons', methods=['GET'])
+@google_auth.route('/surveys/<id>/persons', methods=['GET'])
 @jwt_required
-def persons_names(user_info, id):
+@cross_origin()
+def persons_names(id):
     try:
         each_survey_person_name = fetch_each_survey_person(id)
         return each_survey_person_name, 200
     except Exception as e:
         return f"An Error Occured: {e}"
 
-@survey.route('/surveys/<id>/persons/<name_id>', methods=['GET'])
+@google_auth.route('/surveys/<id>/persons/<name_id>', methods=['GET'])
+@jwt_required
+@cross_origin()
 def person_detail(id, name_id):
     try:
         person_detail = fetch_person_detail(id, name_id) 
@@ -115,7 +138,9 @@ def person_detail(id, name_id):
     except Exception as e:
         return f"An Error Occured: {e}"
 
-@survey.route('/persons', methods=['GET'])
+@google_auth.route('/persons', methods=['GET'])
+@jwt_required
+@cross_origin()
 def all_person_name():
     try:
         get_name = get_names()
@@ -124,7 +149,9 @@ def all_person_name():
         return f"An Error Occured: {e}"
 
 
-@survey.route('/persons/<id>/surveys', methods=['GET'])
+@google_auth.route('/persons/<id>/surveys', methods=['GET'])
+@jwt_required
+@cross_origin()
 def all_survey_for_person(id):
     try:
         get_survey = get_surveys(id)
@@ -132,7 +159,9 @@ def all_survey_for_person(id):
     except Exception as e:
         return f"An Error Occured: {e}"
 
-@survey.route('/persons/<id>/surveys/<survey_id>', methods=['GET'])
+@google_auth.route('/persons/<id>/surveys/<survey_id>', methods=['GET'])
+@jwt_required
+@cross_origin()
 def all_survey_item(id, survey_id):
     try:
         get_survey_item = get_survey_items(id, survey_id)
@@ -140,10 +169,17 @@ def all_survey_item(id, survey_id):
     except Exception as e:
         return f"An Error Occured: {e}"
 
+
 port = int(os.environ.get('PORT', 8080))
 if __name__ == "__main__":
     app = Flask(__name__)
     cors = CORS(app)
-    app.register_blueprint(survey, url_prefix='/sonar')
+    app.config['SECRET_KEY'] = 'foobar'
+    app.config['JWT_IDENTITY_CLAIM'] = 'sub'
+    jwt = JWTManager(app)
+    jwt.init_app(app)
+
+    # app.register_blueprint(survey, url_prefix='/sonar')
     app.register_blueprint(google_auth, url_prefix='/google')
     app.run(threaded=True, host='0.0.0.0', port=port, debug=True)
+

@@ -14,10 +14,10 @@ function LoginHooks() {
     // alert(
     //   `Logged in successfully welcome ${res.profileObj.name} 😍. \n See console for full profile object.`
     // );
-    refreshTokenSetup(res);
-  
-    refreshPage();
 
+    console.log(res);
+    refreshTokenSetup(res);
+    // refreshPage();
   };
 
   const onFailure = (res) => {
@@ -33,6 +33,7 @@ function LoginHooks() {
     clientId,
     isSignedIn: true,
     accessType: 'offline',
+    // hostedDomain: 'eficode.com',
     // responseType: 'code',
     // prompt: 'consent',
   });
