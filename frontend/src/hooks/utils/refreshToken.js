@@ -1,5 +1,6 @@
 import { string } from "prop-types";
 import { useEffect, useContext } from "react";
+import { refreshPage } from './refreshPage';
 
 export const refreshTokenSetup = (res) => {
     // Timing to renew access token
@@ -11,8 +12,6 @@ export const refreshTokenSetup = (res) => {
     let role = "unauthorized";
     if (eficodean)
       role = "eficodean";
-
-    // console.log(res.tokenObj.id_token.toString('base64'))
 
     localStorage.setItem('authToken', res.tokenObj.id_token.toString('base64'))
     localStorage.setItem('user_email', mail);
@@ -36,7 +35,7 @@ export const refreshTokenSetup = (res) => {
       await SignToken(newAuthRes.id_token)
 
     };
-    
+
     SignToken(res.tokenObj.id_token)
 
     // Setup first refresh timer
@@ -57,7 +56,7 @@ const SignToken = async (tokenObj) => {
   const response = await responseObj;
   const signedToken = (await response.json())['auth_token']
   localStorage.setItem('signedAuthToken', signedToken)
-
+  refreshPage()
 }
 
 export const getUserInformation = () => {

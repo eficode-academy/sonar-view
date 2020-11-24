@@ -14,21 +14,16 @@ const useDataLoader = (query, type) => {
       dispatch({ type: `FETCH_${type}_INIT` });
       try {
 
-        // console.log(localStorage.getItem('signedAuthToken'))
-
         const responseObj = fetch(baseUrl, { 
           // method: 'get', 
           headers: new Headers({
             'Access-Control-Allow-Origin': '*',
-            'Authorization': 'Bearer '+ localStorage.getItem('signedAuthToken'), 
+            'Authorization': `Bearer ${ localStorage.getItem('signedAuthToken')}`, 
           }),
           // body: 'A=1&B=2'
         });
         const response = await responseObj;
-
-        // const response = await fetch(baseUrl, {});
         const json = await response.json();
-        console.log(json)
 
         if (!didCancel) {
           dispatch({

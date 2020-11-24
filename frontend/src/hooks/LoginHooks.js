@@ -1,6 +1,5 @@
 import React from 'react';
 import { useGoogleLogin } from 'react-google-login';
-import { refreshPage } from './utils/refreshPage';
 
 // refresh token
 import { refreshTokenSetup } from './utils/refreshToken';
@@ -15,9 +14,8 @@ function LoginHooks() {
     //   `Logged in successfully welcome ${res.profileObj.name} 😍. \n See console for full profile object.`
     // );
 
-    console.log(res);
     refreshTokenSetup(res);
-    // refreshPage();
+    
   };
 
   const onFailure = (res) => {

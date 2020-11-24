@@ -62,6 +62,11 @@ function Wrapper() {
   });
 
   userSubject.updateUser(); // enable observer pattern
+  
+  // default state
+  if(user.role === null) {
+    user.role = 'guest';
+  }
 
   return (
     <Switch id='switch'> 
