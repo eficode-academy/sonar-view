@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import PropTypes from "prop-types";
 import { Flex } from "rebass";
 import { Switch, Route } from "react-router-dom";
@@ -36,7 +36,10 @@ Layout.propTypes = {
   component: PropTypes.func.isRequired,
 };
 
-function Wrapper() {
+
+const Wrapper = () => {
+  const [userState, setUser] = useState(getUserInformation(), "user");
+  
   const layoutRender = (component) => (route) => (
     <Layout component={component} route={route} />
   );
@@ -47,6 +50,8 @@ function Wrapper() {
       action: SET_USER,
       newUser,
     });
+    setUser(newUser)
+    // refreshPage()
   };
 
   useEffect(() => {
@@ -59,6 +64,8 @@ function Wrapper() {
     };
   });
 
+  // implement observer pattern for signedAuthToken. Hook unreliable if page is refreshed
+
   userSubject.updateUser(); // enable observer pattern
   
   // default state
@@ -66,6 +73,11 @@ function Wrapper() {
     clearToken();
   }
 
+  return element(userState, layoutRender)
+
+}
+
+function element(user, layoutRender) {
   return (
     <Switch id='switch'> 
       {hasRole(user, ['eficodean']) && <Route path="/surveys/:date/:email" render={layoutRender(Person)} /> }

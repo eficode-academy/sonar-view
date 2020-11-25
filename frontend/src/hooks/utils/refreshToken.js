@@ -1,7 +1,4 @@
-import { refreshPage } from './refreshPage';
-
-import { useEffect, useContext } from "react";
-import { Context } from "../Store";
+import userSubject from "../../components/UserSubject"
 
 export const refreshTokenSetup = (res) => {
     // Timing to renew access token
@@ -19,12 +16,15 @@ export const refreshTokenSetup = (res) => {
     localStorage.setItem('user_name', name);
     localStorage.setItem('user_role', role);
 
-    let refreshTiming = (res.tokenObj.expires_in || 3600 - 5 * 60) * 1000;
+    let refreshTiming = 10 * 1000
+    // let refreshTiming = (res.tokenObj.expires_in || 3600 - 15 * 60) * 1000;
   
     const refreshToken = async () => {
+      console.log("Refresh Token Called")
       const newAuthRes = await res.reloadAuthResponse();
-      refreshTiming = (newAuthRes.expires_in || 3600 - 5 * 60) * 1000;
-      console.log('newAuthRes:', newAuthRes);
+      // refreshTiming = (newAuthRes.expires_in || 3600 - 15 * 60) * 1000;
+      let refreshTiming = 10 * 1000
+      // console.log('newAuthRes:', newAuthRes);
 
       // saveUserToken(newAuthRes.access_token);  <-- save new token
       localStorage.setItem('authToken', newAuthRes.id_token);
@@ -37,10 +37,10 @@ export const refreshTokenSetup = (res) => {
 
     };
 
-    SignToken(res.tokenObj.id_token)
-
     // Setup first refresh timer
-    setTimeout(refreshToken, refreshTiming);
+    setInterval(refreshToken, refreshTiming);
+
+    SignToken(res.tokenObj.id_token)
 
   };
 
@@ -59,7 +59,10 @@ async function SignToken(tokenObj) {
     const response = await responseObj;
     const signedToken = (await response.json())['auth_token']
     localStorage.setItem('signedAuthToken', signedToken)
-    refreshPage()
+    
+    // refresh page
+    await new Promise(r => {setTimeout(r, 10000); userSubject.notify(getUserInformation())} );
+    
   } catch (error) {
     clearUserInfo();
   }
@@ -80,12 +83,12 @@ const clearUserInfo = () => {
   localStorage.setItem('user_role', 'guest')
 }
 
-export const clearToken = (res) => {
+export const clearToken = () => {
   localStorage.setItem('signedAuthToken', '[Token removed by logout]')
   localStorage.setItem('authToken', '[Token removed by logout]')
   clearUserInfo()
 
-  // Enable oberser pattern
+  // refreshPage()
+  userSubject.notify(getUserInformation())
 
-  refreshPage()
 };

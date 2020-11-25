@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { BrowserRouter as Router} from "react-router-dom";
 import Store from "./hooks/Store";
 import theme from "./utils/theme";
 import Wrapper from './containers/Wrapper';
-
 import { render } from "react-dom";
+
 
 const Sonar = ( ) => {
   const GlobalStyle = createGlobalStyle`
@@ -32,4 +32,6 @@ const Sonar = ( ) => {
   );
 };
 
-render(<Sonar crossorigin />, document.getElementById("app"));
+render(<Sonar />, document.getElementById("app"));
+
+export default Sonar
