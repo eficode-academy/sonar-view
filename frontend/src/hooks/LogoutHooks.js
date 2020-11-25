@@ -5,14 +5,15 @@ import { clearToken } from './utils/refreshToken';
 
 const clientId = process.env.REACT_APP_GOOGLEKEY;
 
-function LogoutHooks() {
-  const onLogoutSuccess = () => {
-    clearToken();
-  };
+const onLogoutSuccess = () => {
+  clearToken();
+};
 
-  const onFailure = () => {
-    console.log('Handle failure cases');
-  };
+const onFailure = () => {
+  console.log('Handle failure cases');
+};
+
+function LogoutHooks() {
 
   const { signOut } = useGoogleLogout({
     clientId,

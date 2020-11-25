@@ -17,7 +17,7 @@ class UserSubject {
     updateUser() {
         this.intervalId = setInterval(() => {
             this.fetchUser();
-        }, 10000);
+        }, 1000);
     }
 
     cleanUpdates() {

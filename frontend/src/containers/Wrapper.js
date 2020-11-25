@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Flex } from "rebass";
 import { Switch, Route } from "react-router-dom";
@@ -6,19 +6,12 @@ import Home from "../components/Home";
 import StudyDetails from "../components/StudyDetails";
 import Person from "../components/Person";
 import SidebarWrapper from "./SidebarWrapper";
-import LoginHooks from '../hooks/LoginHooks';
+import { Login, LoginHooks } from '../hooks/LoginHooks';
 import Unauthorized from "../components/Unauthorized";
 import { hasRole } from '../auth/auth';
 import { clearToken, getUserInformation } from "../hooks/utils/refreshToken";
 import userSubject from "../components/UserSubject";
 
-const SET_USER = 'SET_USER';
-const userReducer = (user, action) => {
-  if (action === SET_USER) {
-    return action.user;
-  }
-  return user;
-}; 
 
 export const Layout = ({ component: Component, route }) => {
   return (
@@ -36,22 +29,32 @@ Layout.propTypes = {
   component: PropTypes.func.isRequired,
 };
 
+function element(user, layoutRender) {
+  return (
+    <>
+      <Switch id='switch'> 
+        {hasRole(user, ['eficodean']) && <Route path="/surveys/:date/:email" render={layoutRender(Person)} /> }
+        {hasRole(user, ['eficodean']) && <Route path="/surveys/:date" render={layoutRender(StudyDetails)} exact /> }
+        {hasRole(user, ['eficodean']) && <Route path="/" render={layoutRender(Home)} exact /> }
+
+        {/* Add page for guest users (non eficodeans) */}
+        {hasRole(user, ['guest']) && <Route path="/" render={() => <LoginHooks />} exact /> }
+        {hasRole(user, ['unauthorized']) && <Route path="/" render={Unauthorized} exact /> }
+
+        <Route render={() => <h1>404: page not found</h1>} />
+      </Switch>
+    </>
+  );
+}
 
 const Wrapper = () => {
+  Login();
   const [userState, setUser] = useState(getUserInformation(), "user");
-  
-  const layoutRender = (component) => (route) => (
-    <Layout component={component} route={route} />
-  );
-
-  const [user, dispatch] = useReducer(userReducer, getUserInformation());
   const onUserUpdated = (newUser) => {
-    dispatch({
-      action: SET_USER,
-      newUser,
-    });
-    setUser(newUser)
-    // refreshPage()
+    // avoid unneccessary renders
+    const equal = (newUser.role === userState.role && newUser.mail === userState.mail);
+    if(!equal)
+      setUser(newUser);
   };
 
   useEffect(() => {
@@ -64,34 +67,18 @@ const Wrapper = () => {
     };
   });
 
-  // implement observer pattern for signedAuthToken. Hook unreliable if page is refreshed
-
   userSubject.updateUser(); // enable observer pattern
   
   // default state
-  if(user.role === null) {
+  if(userState.roles === null)
     clearToken();
-  }
 
-  return element(userState, layoutRender)
-
-}
-
-function element(user, layoutRender) {
-  return (
-    <Switch id='switch'> 
-      {hasRole(user, ['eficodean']) && <Route path="/surveys/:date/:email" render={layoutRender(Person)} /> }
-      {hasRole(user, ['eficodean']) && <Route path="/surveys/:date" render={layoutRender(StudyDetails)} exact /> }
-      {hasRole(user, ['eficodean']) && <Route path="/" render={layoutRender(Home)} exact /> }
-
-      {/* Add page for guest users (non eficodeans) */}
-      {hasRole(user, ['guest']) && <Route path="/" render={() => <LoginHooks />} exact /> }
-      {hasRole(user, ['unauthorized']) && <Route path="/" render={Unauthorized} exact /> }
-
-      <Route render={() => <h1>404: page not found</h1>} />
-      
-    </Switch>
+  const layoutRender = (component) => (route) => (
+    <Layout component={component} route={route} />
   );
-}
+
+  return element(userState, layoutRender);
+
+};
 
 export default Wrapper;
