@@ -17,7 +17,7 @@ class UserSubject {
     updateUser() {
         this.intervalId = setInterval(() => {
             this.fetchUser();
-        }, 1000);
+        }, 1000); // refresh user every 1s
     }
 
     cleanUpdates() {
@@ -33,7 +33,6 @@ class UserSubject {
             mail: localStorage.getItem('user_email'),
             roles: localStorage.getItem('user_role'),
           };
-        // console.log(user)
         this.notify(user);
         return user;
     };

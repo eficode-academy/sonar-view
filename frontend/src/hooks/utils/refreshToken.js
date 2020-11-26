@@ -2,7 +2,6 @@ import userSubject from "../../components/UserSubject"
 
 export const refreshTokenSetup = (res) => {
 
-  
     const refreshToken = async () => {
       console.log("Refresh Token Called")
       const newAuthRes = await res.reloadAuthResponse();
@@ -23,6 +22,7 @@ export const refreshTokenSetup = (res) => {
     let refreshTiming = (res.tokenObj.expires_in || 3600 - 15 * 60) * 1000;
     setTimeout(refreshToken, refreshTiming);
     SignToken(res)
+
   };
 
 function SaveUserInfo(res) {
@@ -38,6 +38,7 @@ function SaveUserInfo(res) {
   localStorage.setItem('user_email', mail);
   localStorage.setItem('user_name', name);
   localStorage.setItem('user_role', role);
+  
 }
 
 async function SignToken(res) {
@@ -56,10 +57,10 @@ async function SignToken(res) {
     const signedToken = (await response.json())['auth_token']
     localStorage.setItem('signedAuthToken', signedToken)
     SaveUserInfo(res)
-    
   } catch (error) {
     clearUserInfo();
   }
+  
 }
 
 export const getUserInformation = () => {

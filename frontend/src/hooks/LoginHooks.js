@@ -46,7 +46,7 @@ export function LoginHooks() {
     clientId,
     isSignedIn: true,
     accessType: 'offline',
-    // hostedDomain: 'eficode.com',
+    // hostedDomain: 'eficode.com', // auto selects eficode account instead of showing logged in accounts
     // responseType: 'code',
     // prompt: 'consent',
   });

@@ -1,25 +1,24 @@
 version: "3.3"
 services:
   
-  backend_base:
-    build: backend/data_endpoints/base_image
-    image: stifstof/backend_base:latest
+  # backend_base:
+    # build: backend/data_endpoints/base_image
+    # image: stifstof/backend_base:latest
   
   backend:
-    depends_on: 
-      - backend_base
+    # depends_on: 
+    #   - backend_base
     build: backend/data_endpoints/
-    image: stifstof/backend:latest
-    environment:
-      - GCKEYFILE=$GCKEYFILE
+    image: backend:latest
+    # environment:
+      # - GCKEYFILE=$GCKEYFILE
     ports:
       - "8080:8080"
     network_mode: host
   
   frontend:
     build: frontend/
-    image: stifstof/frontend:latest
+    image: frontend:latest
     ports:
       - "3000:3000"
     network_mode: host
-  
