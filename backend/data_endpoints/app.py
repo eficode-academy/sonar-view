@@ -40,9 +40,10 @@ def authentication():
 
     token = request.headers.get("Authorization").split(' ')[1]
     # token = request.form.get('token')
-    if not token:
-        raise ValueError('No token')
+    
     try:
+        if not token:
+            raise ValueError('No token')
         # Specify the CLIENT_ID of the app that accesses the backend:
         id_info = id_token.verify_oauth2_token(
             token, requests.Request(), CLIENT_ID)
@@ -64,6 +65,8 @@ def authentication():
         return jsonify(msg='Login succeed', auth_token=jwt_token.decode())
     except ValueError as e:
         # Invalid Google token
+        return make_response(jsonify(msg='Login failed: {}'.format(e)), 401)
+    except KeyError as e:
         return make_response(jsonify(msg='Login failed: {}'.format(e)), 401)
 
 # Post a survey
