@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Flex } from "rebass";
 import { Switch, Route } from "react-router-dom";
 import Home from "../components/Home";
-import Main from "../components/Main";
+import StudyDetails from "../components/StudyDetails";
 import Person from "../components/Person";
 import SidebarWrapper from "./SidebarWrapper";
+import { Login, LoginHooks } from '../hooks/LoginHooks';
+import Unauthorized from "../components/Unauthorized";
+import { hasRole } from '../auth/auth';
+import { getUserInformation } from "../hooks/utils/refreshToken";
+import userSubject from "../components/UserSubject";
+
 
 export const Layout = ({ component: Component, route }) => {
   return (
@@ -23,19 +29,60 @@ Layout.propTypes = {
   component: PropTypes.func.isRequired,
 };
 
-function Wrapper() {
+function element(user) {
   const layoutRender = (component) => (route) => (
     <Layout component={component} route={route} />
   );
 
   return (
-    <Switch>
-      <Route path="/" exact render={layoutRender(Home)} />
-      <Route exact path="/surveys/:date" render={layoutRender(Main)} />
-      <Route path="/surveys/:date/:email" render={layoutRender(Person)} />
-      <Route render={() => <h1>404: page not found</h1>} />
-    </Switch>
+    <>
+      <Switch id='switch'> 
+        {hasRole(user, ['eficodean']) && <Route path="/surveys/:date/:email" render={layoutRender(Person)} /> }
+        {hasRole(user, ['eficodean']) && <Route path="/surveys/:date" render={layoutRender(StudyDetails)} exact /> }
+        {hasRole(user, ['eficodean']) && <Route path="/" render={layoutRender(Home)} exact /> }
+
+        {/* Add page for guest users (non eficodeans) */}
+        {hasRole(user, ['guest']) && <Route path="/" render={() => <LoginHooks />} exact /> }
+        {hasRole(user, ['unauthorized']) && <Route path="/" render={Unauthorized} exact /> }
+        
+        <Route render={() => <h1>404: page not found</h1>} />
+      </Switch>
+    </>
   );
 }
+
+const Wrapper = () => {
+  Login(); // hook call. Ensures token gets refreshed if the user accidentially refreshes the browser
+
+  const [userState, setUser] = useState(getUserInformation(), "user");
+  const onUserUpdated = (newUser) => {
+    // avoid unneccessary renders of Wrapper element
+    const equal = (newUser.role === userState.role && newUser.mail === userState.mail);
+    if(!equal)
+      setUser(newUser);
+  };
+
+  // Registers event handler for observer pattern
+  useEffect(() => {
+    //  Fetch from State
+    userSubject.attach(onUserUpdated);
+
+    // detach when unmount
+    return () => {
+      userSubject.detach(onUserUpdated);
+    };
+  });
+
+  // Enable observer pattern updates
+  useEffect(() => {
+    // This call updates the user every second via setInterval
+    // from localStorage triggering the observer pattern to
+    // update the user via notify() triggering the event handlers above
+    userSubject.updateUser(); 
+  });
+
+  return element(userState);
+
+};
 
 export default Wrapper;

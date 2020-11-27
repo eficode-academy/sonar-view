@@ -1,3 +1,5 @@
+const Dotenv = require('dotenv-webpack');
+
 module.exports = {
   module: {
     rules: [
@@ -28,4 +30,12 @@ module.exports = {
     disableHostCheck: true,
     hot: true,
   },
+  plugins: [
+    new Dotenv({
+      path: '.env.local',
+      defaults: '.env.production'
+    })
+  ]
 };
+
+ 

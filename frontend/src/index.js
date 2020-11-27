@@ -1,12 +1,13 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect } from "react";
 import { ThemeProvider, createGlobalStyle } from "styled-components";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router} from "react-router-dom";
 import Store from "./hooks/Store";
-import Wrapper from "./containers/Wrapper";
 import theme from "./utils/theme";
+import Wrapper from './containers/Wrapper';
+import { render } from "react-dom";
 
-const Sonar = () => {
+
+const Sonar = ( ) => {
   const GlobalStyle = createGlobalStyle`
   body {
     padding: 0;
@@ -17,17 +18,20 @@ const Sonar = () => {
       font-family: ${theme.font};
       color: ${theme.colors.black};
     }
-  } `;
+  }`;
 
   return (
     <Store>
-      <BrowserRouter>
+      <Router>
         <ThemeProvider theme={theme}>
           <GlobalStyle />
           <Wrapper />
         </ThemeProvider>
-      </BrowserRouter>
+      </Router>
     </Store>
   );
 };
-ReactDOM.render(<Sonar />, document.getElementById("app"));
+
+render(<Sonar />, document.getElementById("app"));
+
+export default Sonar

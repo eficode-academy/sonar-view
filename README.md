@@ -21,7 +21,7 @@ This project uses [venv](https://www.freecodecamp.org/news/manage-multiple-pytho
 ### Creating mock data
 This is the mock-data to work with frontend. The real app will replace this data from other source in future
 
-    cd sonar/
+    cd sonar-view/
     test-data/convert-to-json.py
 
 *data.json* file is created *under test-data*
