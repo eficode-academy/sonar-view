@@ -9,7 +9,7 @@ import SidebarWrapper from "./SidebarWrapper";
 import { Login, LoginHooks } from '../hooks/LoginHooks';
 import Unauthorized from "../components/Unauthorized";
 import { hasRole } from '../auth/auth';
-import { clearToken, getUserInformation } from "../hooks/utils/refreshToken";
+import { getUserInformation } from "../hooks/utils/refreshToken";
 import userSubject from "../components/UserSubject";
 
 
@@ -30,6 +30,10 @@ Layout.propTypes = {
 };
 
 function element(user, layoutRender) {
+  const layoutRender = (component) => (route) => (
+    <Layout component={component} route={route} />
+  );
+
   return (
     <>
       <Switch id='switch'> 
@@ -40,7 +44,7 @@ function element(user, layoutRender) {
         {/* Add page for guest users (non eficodeans) */}
         {hasRole(user, ['guest']) && <Route path="/" render={() => <LoginHooks />} exact /> }
         {hasRole(user, ['unauthorized']) && <Route path="/" render={Unauthorized} exact /> }
-
+        
         <Route render={() => <h1>404: page not found</h1>} />
       </Switch>
     </>
@@ -48,15 +52,17 @@ function element(user, layoutRender) {
 }
 
 const Wrapper = () => {
-  Login();
+  Login(); // hook call. Ensures token gets refreshed if the user accidentially refreshes the browser
+
   const [userState, setUser] = useState(getUserInformation(), "user");
   const onUserUpdated = (newUser) => {
-    // avoid unneccessary renders
+    // avoid unneccessary renders of Wrapper element
     const equal = (newUser.role === userState.role && newUser.mail === userState.mail);
     if(!equal)
       setUser(newUser);
   };
 
+  // Observer pattern
   useEffect(() => {
     //  Fetch from State
     userSubject.attach(onUserUpdated);
@@ -67,17 +73,8 @@ const Wrapper = () => {
     };
   });
 
-  userSubject.updateUser(); // enable observer pattern
-  
-  // default state
-  if(userState.roles === null)
-    clearToken();
 
-  const layoutRender = (component) => (route) => (
-    <Layout component={component} route={route} />
-  );
-
-  return element(userState, layoutRender);
+  return element(userState);
 
 };
 

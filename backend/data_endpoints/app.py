@@ -44,6 +44,7 @@ def authentication():
     try:
         if not token:
             raise ValueError('No token')
+        
         # Specify the CLIENT_ID of the app that accesses the backend:
         id_info = id_token.verify_oauth2_token(
             token, requests.Request(), CLIENT_ID)

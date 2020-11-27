@@ -15,14 +15,12 @@ export const refreshTokenSetup = (res) => {
 
       // Query backend for signed token
       await SignToken(newAuthRes.id_token)
-
     };
 
     // Setup first refresh timer
     let refreshTiming = (res.tokenObj.expires_in || 3600 - 15 * 60) * 1000;
     setTimeout(refreshToken, refreshTiming);
     SignToken(res)
-
   };
 
 function SaveUserInfo(res) {
@@ -64,10 +62,14 @@ async function SignToken(res) {
 }
 
 export const getUserInformation = () => {
+  var role = localStorage.getItem('user_role')
+  if (role === null)
+    role = "guest"
+
   return {
     name: localStorage.getItem('user_name'),
     mail: localStorage.getItem('user_email'),
-    roles: [localStorage.getItem('user_role')]
+    roles: [ role ]
   };
 };
 
