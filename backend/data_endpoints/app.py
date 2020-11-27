@@ -21,25 +21,12 @@ from flask_jwt_extended import (
 google_auth = Blueprint('google_login', __name__)
 @cross_origin()
 
-# survey = Blueprint(
-#     'home', __name__, ) # template_folder='templates', static_folder='static')
-# @cross_origin()
-
 
 # Google auth
 @google_auth.route('/auth', methods=['POST'])
 @cross_origin()
 def authentication():
-    # print("Content of req")
-
-    # print(request.get_data())
-    # print(request.headers)
-    # print(request.headers.get("Authorization"))
-    # print(request.headers.get('Authorization'))
-    # print(request.headers.get('Content-Type'))
-
     token = request.headers.get("Authorization").split(' ')[1]
-    # token = request.form.get('token')
     
     try:
         if not token:
@@ -174,15 +161,23 @@ def all_survey_item(id, survey_id):
         return f"An Error Occured: {e}"
 
 
-port = int(os.environ.get('PORT', 8080))
-if __name__ == "__main__":
-    app = Flask(__name__)
-    cors = CORS(app)
-    app.config['SECRET_KEY'] = 'foobar'
-    app.config['JWT_IDENTITY_CLAIM'] = 'sub'
-    jwt = JWTManager(app)
-    jwt.init_app(app)
+@google_auth.after_request # blueprint can also be app~~
+def after_request(response):
+    header = response.headers
+    header['Access-Control-Allow-Origin'] = '*'
+    print(response)
+    return response
 
-    # app.register_blueprint(survey, url_prefix='/sonar')
-    app.register_blueprint(google_auth, url_prefix='/google')
+port = int(os.environ.get('PORT', 8080))
+
+app = Flask(__name__)
+cors = CORS(app)
+app.config['SECRET_KEY'] = 'foobar'
+app.config['JWT_IDENTITY_CLAIM'] = 'sub'
+jwt = JWTManager(app)
+jwt.init_app(app)
+# app.register_blueprint(survey, url_prefix='/sonar')
+app.register_blueprint(google_auth, url_prefix='/google')
+
+if __name__ == "__main__":
     app.run(threaded=True, host='0.0.0.0', port=port, debug=True)
