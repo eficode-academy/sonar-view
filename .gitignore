@@ -176,3 +176,4 @@ media
 static
 
 backend/data_endpoints/base_image/google.json
+frontend/public/
