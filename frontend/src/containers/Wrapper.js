@@ -29,7 +29,7 @@ Layout.propTypes = {
   component: PropTypes.func.isRequired,
 };
 
-function element(user, layoutRender) {
+function element(user) {
   const layoutRender = (component) => (route) => (
     <Layout component={component} route={route} />
   );
@@ -62,7 +62,7 @@ const Wrapper = () => {
       setUser(newUser);
   };
 
-  // Observer pattern
+  // Registers event handler for observer pattern
   useEffect(() => {
     //  Fetch from State
     userSubject.attach(onUserUpdated);
@@ -73,6 +73,13 @@ const Wrapper = () => {
     };
   });
 
+  // Enable observer pattern updates
+  useEffect(() => {
+    // This call updates the user every second via setInterval
+    // from localStorage triggering the observer pattern to
+    // update the user via notify() triggering the event handlers above
+    userSubject.updateUser(); 
+  });
 
   return element(userState);
 
