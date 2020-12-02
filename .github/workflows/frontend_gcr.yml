@@ -58,14 +58,15 @@ jobs:
       #     region: ${{ secrets.REGION }}
       #     # env: [path-to-env-file]
       #     service key: ${{ secrets.GCLOUD_AUTH }}
-      
+
       - id: deploy
         uses: google-github-actions/deploy-cloudrun@main
         with:
           image: eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+          project_id: ${{ secrets.PROJECT_ID }}
           service: ${{ secrets.SERVICE_NAME }}
+          region: ${{ secrets.REGION }}
           credentials: ${{ secrets.GCLOUD_AUTH }}
-
 
 # Following secrets needs to be available in Github Secrets
 # SERVICE_NAME=sonar-survey
