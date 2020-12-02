@@ -62,7 +62,7 @@ jobs:
       - id: deploy
         uses: google-github-actions/deploy-cloudrun@main
         with:
-          image: eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+          image: eu.gcr.io/{$PROJECT_ID}/{$SERVICE_NAME}:{$GITHUB_SHA}
           project_id: ${{ secrets.PROJECT_ID }}
           service: ${{ secrets.SERVICE_NAME }}
           region: ${{ secrets.REGION }}
