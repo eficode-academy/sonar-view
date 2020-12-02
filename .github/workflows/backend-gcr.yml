@@ -48,7 +48,7 @@ jobs:
 
       - name: Deploy
         run: |-
-          gcloud run deploy ${{ secrets.SERVICE_NAME }} \
+          gcloud run deploy "$SERVICE_NAME" \
           --quiet \
           --region ${{ secrets.REGION }} \
           --image "eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \

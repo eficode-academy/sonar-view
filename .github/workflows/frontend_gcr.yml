@@ -51,7 +51,7 @@ jobs:
 
       - name: Deploy
         run: |-
-          gcloud run deploy ${{ secrets.SERVICE_NAME }} \
+          gcloud run deploy "$SERVICE_NAME" \
           --quiet \
           --region ${{ secrets.REGION }} \
           --image "eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
@@ -59,7 +59,7 @@ jobs:
           --port "3000"
 
 # Following secrets needs to be available in Github Secrets
-# FRONTEND_SERVICE_NAME=sonar-survey
+# FRONTEND_SERVICE_NAME=sonar-app
 # PROJECT_ID=sonar-272913
 # REGION=europe-north1
 # GCLOUD_AUTH= Base64 encoded service acccount
