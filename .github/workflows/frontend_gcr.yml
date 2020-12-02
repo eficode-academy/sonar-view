@@ -55,8 +55,7 @@ jobs:
           --quiet \
           --region ${{ secrets.REGION }} \
           --image "eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
-          --platform "managed" \
-          --service-account ${{ secrets.GCLOUD_AUTH }}
+          --platform "managed"
 
       - id: deploy
         uses: google-github-actions/deploy-cloudrun@main
@@ -72,3 +71,7 @@ jobs:
 # PROJECT_ID=sonar-272913
 # REGION=europe-north1
 # GCLOUD_AUTH= Base64 encoded service acccount
+
+
+#  \
+#           --service-account ${{ secrets.GCLOUD_AUTH }}
