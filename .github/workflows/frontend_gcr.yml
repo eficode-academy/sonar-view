@@ -37,6 +37,8 @@ jobs:
       # Build docker image
       - name: Image
         run: |-
+          echo "REACT_APP_GOOGLEKEY=20840044614-h4k2pdffbgumpqvri0g1sv5mn4q61q71.apps.googleusercontent.com" > .env.production
+          echo "REACT_APP_URL=https://sonar-survey-rioz6g7rrq-lz.a.run.app/google" >> .env.production
           docker build frontend/ --file frontend/Dockerfile --tag eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
       #docker build --build-arg -t eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA .
       # Configure docker to use the gcloud command-line tool as a credential helper
@@ -47,15 +49,22 @@ jobs:
         run: |-
           docker push eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
 
-      - name: Deploy service to Cloud Run
-        uses: stefda/action-cloud-run@v1.0
+      # - name: Deploy service to Cloud Run
+      #   uses: stefda/action-cloud-run@v1.0
+      #   with:
+      #     image: eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+      #     service: ${{ secrets.SERVICE_NAME }}
+      #     project: ${{ secrets.PROJECT_ID }}
+      #     region: ${{ secrets.REGION }}
+      #     # env: [path-to-env-file]
+      #     service key: ${{ secrets.GCLOUD_AUTH }}
+      
+      - id: deploy
+        uses: google-github-actions/deploy-cloudrun@main
         with:
           image: eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
           service: ${{ secrets.SERVICE_NAME }}
-          project: ${{ secrets.PROJECT_ID }}
-          region: ${{ secrets.REGION }}
-          # env: [path-to-env-file]
-          service key: ${{ secrets.GCLOUD_AUTH }}
+          credentials: ${{ secrets.GCLOUD_AUTH }}
 
 
 # Following secrets needs to be available in Github Secrets
