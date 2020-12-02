@@ -1,4 +1,4 @@
-name: Frontend-Docker-gcr
+name: Frontend-Docker-GCR
 on:
   push:
     # Publish `master` as Docker `latest` image.
