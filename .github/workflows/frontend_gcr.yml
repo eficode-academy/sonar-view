@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    name: Build image
+    name: Deploy frontend
     runs-on: ubuntu-latest
 
     env:
@@ -36,7 +36,7 @@ jobs:
           export_default_credentials: true
 
       # Build docker image
-      - name: Build Image GCR
+      - name: Build
         run: |-
           echo "REACT_APP_GOOGLEKEY=20840044614-h4k2pdffbgumpqvri0g1sv5mn4q61q71.apps.googleusercontent.com" > frontend/.env.production
           echo "REACT_APP_URL=https://sonar-survey-rioz6g7rrq-lz.a.run.app/google" >> frontend/.env.production
@@ -48,6 +48,15 @@ jobs:
       - name: Push Image GCR
         run: |-
           docker push eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+
+      - name: Deploy
+        run: |-
+          gcloud run deploy ${{ secrets.SERVICE_NAME }} \
+          --quiet \
+          --region ${{ secrets.REGION }} \
+          --image "eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
+          --platform "managed" \
+          --service-account ${{ secrets.GCLOUD_AUTH }}
 
       - id: deploy
         uses: google-github-actions/deploy-cloudrun@main
