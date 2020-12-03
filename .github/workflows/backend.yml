@@ -1,4 +1,4 @@
-name: Frontend-Docker-GCR
+name: Backend-Docker-GCR
 on:
   push:
     # Publish `master` as Docker `latest` image.
@@ -8,21 +8,20 @@ on:
     tags:
       - v*
     paths:
-      - 'frontend/*'
+      - 'backend/*'
   # Run tests for any PRs.
   pull_request:
 
 jobs:
   build:
-    name: Deploy frontend
+    name: Deploy backend
     runs-on: ubuntu-latest
 
     env:
       HASH: $(git rev-parse --short "$GITHUB_SHA")
       BRANCH: ${GITHUB_REF##*/}
-      SERVICE_NAME: ${{ secrets.FRONTEND_SERVICE_NAME }}
+      SERVICE_NAME: ${{ secrets.BACKEND_SERVICE_NAME }}
       PROJECT_ID: ${{ secrets.PROJECT_ID }}
-      IMAGE: eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
 
     steps:
       - name: Checkout
@@ -38,12 +37,12 @@ jobs:
       # Build docker image
       - name: Build
         run: |-
-          echo "REACT_APP_GOOGLEKEY=20840044614-h4k2pdffbgumpqvri0g1sv5mn4q61q71.apps.googleusercontent.com" > frontend/.env.production
-          echo "REACT_APP_URL=https://sonar-survey-rioz6g7rrq-lz.a.run.app/google" >> frontend/.env.production
-          docker build frontend/ --file frontend/Dockerfile --tag eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+          docker build backend/data_endpoints/ --file backend/data_endpoints/Dockerfile --tag eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+      
       # Configure docker to use the gcloud command-line tool as a credential helper
       - run: |
           gcloud auth configure-docker -q
+      
       # Push image to Google Container Registry
       - name: Push Image GCR
         run: |-
@@ -56,11 +55,11 @@ jobs:
           --region ${{ secrets.REGION }} \
           --image "eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA" \
           --platform "managed" \
-          --port "3000" \
+          --port "8080" \
           --allow-unauthenticated
 
 # Following secrets needs to be available in Github Secrets
-# FRONTEND_SERVICE_NAME=sonar-app
+# BACKEND_SERVICE_NAME=sonar-survey
 # PROJECT_ID=sonar-272913
 # REGION=europe-north1
 # GCLOUD_AUTH= Base64 encoded service acccount
