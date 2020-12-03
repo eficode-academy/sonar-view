@@ -1,16 +1,17 @@
 name: Backend-Docker-GCR
 on:
   push:
-    # Publish `master` as Docker `latest` image.
+    # Publish `master/main` as Docker `latest` image.
     branches:
       - master
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
+      - main
     paths:
       - 'backend/*'
-  # Run tests for any PRs.
+  # Run tests for any PRs to master/main.
   pull_request:
+    branches:
+      - master
+      - main
 
 jobs:
   build:

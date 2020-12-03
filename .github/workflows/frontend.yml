@@ -4,13 +4,14 @@ on:
     # Publish `master` as Docker `latest` image.
     branches:
       - master
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
+      - main
     paths:
       - 'frontend/*'
   # Run tests for any PRs.
   pull_request:
+    branches:
+      - master
+      - main
 
 jobs:
   build:
